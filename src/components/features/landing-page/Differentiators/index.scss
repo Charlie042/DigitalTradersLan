@@ -1,0 +1,21 @@
+/* ---- DIFFERENTIATORS ---- */
+.diff { background: var(--black); padding: 8rem 2.5rem; border-bottom: var(--border); }
+.diff-inner { max-width: 900px; margin: 0 auto; text-align: center; }
+.diff-inner .eyebrow { color: var(--white); justify-content: center; }
+.diff-inner .section-h { color: var(--white); }
+.diff-inner .section-body { color: rgba(255,255,255,0.5); max-width: 420px; margin: 0 auto; }
+.tag-cloud { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 3rem; }
+.d-tag {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800; font-size: 0.88rem; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 0.55rem 1.3rem; border-radius: 999px;
+  border: 2.5px solid; cursor: default;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+.d-tag:hover { transform: translate(-2px,-2px); }
+.d-tag.blue   { background: var(--electric); color: var(--white); border-color: var(--electric); box-shadow: 3px 3px 0 rgba(27,77,255,0.3); }
+.d-tag.white  { background: var(--white); color: var(--black); border-color: var(--white); box-shadow: 3px 3px 0 rgba(255,255,255,0.15); }
+.d-tag.coral  { background: var(--coral); color: var(--white); border-color: var(--coral); box-shadow: 3px 3px 0 rgba(255,61,90,0.3); }
+.d-tag.lime   { background: var(--lime); color: var(--black); border-color: var(--lime); box-shadow: 3px 3px 0 rgba(0,230,118,0.25); }
+.d-tag.violet { background: var(--violet); color: var(--white); border-color: var(--violet); box-shadow: 3px 3px 0 rgba(124,58,237,0.3); }
+.d-tag.outline{ background: transparent; color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.2); }

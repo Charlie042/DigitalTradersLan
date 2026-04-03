@@ -1,0 +1,35 @@
+/* ---- LANDING NAV ---- */
+.landing-nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1rem 2.5rem;
+  background: var(--white);
+  border-bottom: var(--border);
+}
+.logo {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem; letter-spacing: 0.06em;
+  color: var(--black);
+}
+.logo .dot { color: var(--electric); }
+.landing-nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
+.landing-nav ul li a {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.82rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--black); text-decoration: none; transition: color 0.15s;
+}
+.landing-nav ul li a:hover { color: var(--electric); }
+
+.nav-cta {
+  background: var(--electric) !important; color: var(--white) !important;
+  padding: 0.55rem 1.4rem !important;
+  border-radius: 3px; border: var(--border);
+  box-shadow: 3px 3px 0 var(--black);
+  transition: transform 0.15s, box-shadow 0.15s !important;
+}
+.nav-cta:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--black) !important; color: var(--white) !important; }
+
+@media (max-width: 800px) {
+  nav ul { display: none; }
+  nav { padding: 1rem 1.5rem; }
+}

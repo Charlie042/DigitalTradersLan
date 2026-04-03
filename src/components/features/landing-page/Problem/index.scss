@@ -1,0 +1,21 @@
+/* ---- PROBLEM ---- */
+.problem { background: var(--off); padding: 8rem 2.5rem; border-bottom: var(--border); }
+.prob-inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: center; }
+.prob-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
+.prob-card {
+  background: var(--white); border: var(--border); border-radius: 4px; padding: 1.4rem;
+  box-shadow: var(--shadow); transition: transform 0.18s, box-shadow 0.18s;
+}
+.prob-card:hover { transform: translate(-3px,-3px); box-shadow: var(--shadow-lg); }
+.prob-tag {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.5rem;
+  color: var(--coral);
+}
+.prob-card h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.05rem; margin-bottom: 0.35rem; }
+.prob-card p { font-size: 0.82rem; color: rgba(13,13,13,0.55); line-height: 1.65; }
+
+@media (max-width: 800px) {
+  .prob-inner { grid-template-columns: 1fr; gap: 2.5rem; }
+  .prob-cards { grid-template-columns: 1fr; }
+}

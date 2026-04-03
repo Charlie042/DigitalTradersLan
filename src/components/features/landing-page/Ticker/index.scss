@@ -1,0 +1,37 @@
+/* ---- TICKER ---- */
+.ticker-wrap {
+  background: var(--electric);
+  border-bottom: var(--border);
+  padding: 0.7rem 0; overflow: hidden;
+}
+.ticker-track {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: ticker 20s linear infinite;
+}
+.ticker-item {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.9rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0 2rem; color: rgba(255,255,255,0.9);
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.ticker-item .up { color: var(--lime); }
+.ticker-item .dn { color: #FFB3BD; }
+.ticker-item::after { content: '◆'; font-size: 0.45rem; opacity: 0.5; margin-left: 1rem; }
+@keyframes ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+
+/* ---- MARQUEE ---- */
+.marquee-wrap {
+  background: var(--black); border-bottom: var(--border);
+  padding: 0.8rem 0; overflow: hidden;
+}
+.marquee-track {
+  display: flex; gap: 0; white-space: nowrap;
+  animation: ticker 22s linear infinite;
+}
+.marquee-item {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.35rem; letter-spacing: 0.1em;
+  color: var(--white); padding: 0 2.5rem;
+  display: flex; align-items: center; gap: 1.5rem;
+}
+.marquee-item .star { color: var(--electric); font-size: 0.9rem; }

@@ -1,0 +1,39 @@
+/* ---- CTA ---- */
+.cta-section {
+  background: var(--electric);
+  padding: 9rem 2.5rem; text-align: center;
+  position: relative; overflow: hidden;
+  border-bottom: var(--border);
+}
+/* grid overlay */
+.cta-section::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+.cta-corner-tl {
+  position: absolute; top: 0; left: 0;
+  width: 160px; height: 160px;
+  background: rgba(255,255,255,0.07);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+.cta-corner-br {
+  position: absolute; bottom: 0; right: 0;
+  width: 160px; height: 160px;
+  background: rgba(255,255,255,0.07);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+.cta-inner { position: relative; z-index: 1; }
+.cta-inner .eyebrow { color: rgba(255,255,255,0.7); justify-content: center; }
+.cta-inner .eyebrow .bar { background: rgba(255,255,255,0.7); }
+.cta-hl {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3.5rem, 11vw, 9rem); line-height: 0.88;
+  color: var(--white); margin: 1rem 0 2rem; letter-spacing: 0.02em;
+}
+.cta-hl .blk { background: var(--black); color: var(--white); padding: 0.02em 0.15em; }
+.cta-body { font-size: 1.05rem; color: rgba(255,255,255,0.7); max-width: 440px; margin: 0 auto 3rem; line-height: 1.8; }
+.cta-fine { margin-top: 1.25rem; font-size: 0.78rem; color: rgba(255,255,255,0.45); letter-spacing: 0.06em; }

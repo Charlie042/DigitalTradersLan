@@ -1,0 +1,16 @@
+/* ---- FOOTER ---- */
+footer {
+  background: var(--black); border-top: var(--border);
+  padding: 2.5rem 2.5rem;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;
+}
+.f-logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 0.06em; color: var(--white); }
+.f-logo .dot { color: var(--electric); }
+.f-links { display: flex; gap: 2rem; }
+.f-links a {
+  font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.8rem;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s;
+}
+.f-links a:hover { color: var(--electric); }
+.f-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }

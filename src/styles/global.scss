@@ -1,0 +1,78 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --electric: #1B4DFF;   /* bold electric blue  — primary */
+  --lime:     #00E676;   /* neon lime green      — win / positive */
+  --coral:    #FF3D5A;   /* hot coral-red        — alert / heat */
+  --violet:   #7C3AED;   /* deep violet          — premium feel */
+  --cyan:     #00D4FF;   /* bright cyan          — accent */
+  --orange:   #FF6B1A;   /* punchy orange        — coming soon */
+}
+
+/* Default Theme or Light Theme Variables */
+:root, [data-theme='light'] {
+  --white:   #FFFFFF;
+  --off:     #F8F7F4;
+  --black:   #0D0D0D;
+  --ink:     #1A1A1A;
+  --bg-color: #F8F7F4;
+  --card-bg: #FFFFFF;
+  --text-dim: rgba(13, 13, 13, 0.6);
+  --border: 3px solid var(--black);
+  --shadow: 5px 5px 0 var(--black);
+  --shadow-lg: 8px 8px 0 var(--black);
+}
+
+/* Dark Theme Variables */
+[data-theme='dark'] {
+  --white:   #0D0D0D;
+  --off:     #1A1A1A;
+  --black:   #FFFFFF;
+  --ink:     #050505;
+  --bg-color: #0b0e11;
+  --card-bg: #15191e;
+  --text-dim: rgba(255, 255, 255, 0.6);
+  --border: 3px solid var(--black);
+  --shadow: 5px 5px 0 rgba(255,255,255,0.1);
+  --shadow-lg: 8px 8px 0 rgba(255,255,255,0.1);
+}
+
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Barlow', sans-serif;
+  background: var(--white);
+  color: var(--black);
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ---- BUTTONS ---- */
+.btn {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900; font-size: 1rem; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 0.9rem 2.25rem; border-radius: 3px; text-decoration: none;
+  display: inline-block; transition: transform 0.15s, box-shadow 0.15s;
+  border: var(--border);
+}
+.btn-blue { background: var(--electric); color: var(--white); box-shadow: var(--shadow); }
+.btn-blue:hover { transform: translate(-3px,-3px); box-shadow: var(--shadow-lg); }
+.btn-ghost { background: transparent; color: var(--black); box-shadow: var(--shadow); }
+.btn-ghost:hover { background: var(--off); transform: translate(-3px,-3px); box-shadow: var(--shadow-lg); }
+.btn-coral { background: var(--coral); color: var(--white); box-shadow: var(--shadow); }
+.btn-coral:hover { transform: translate(-3px,-3px); box-shadow: var(--shadow-lg); }
+
+/* ---- SECTION COMMON ---- */
+.eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700; font-size: 0.76rem; letter-spacing: 0.2em; text-transform: uppercase;
+  display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem;
+}
+.eyebrow .bar { display: block; width: 28px; height: 3px; background: currentColor; }
+h2.section-h {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.8rem, 6vw, 5rem); line-height: 0.92; letter-spacing: 0.02em;
+  margin-bottom: 1.25rem;
+}
+.section-body { font-size: 1rem; color: rgba(13,13,13,0.6); line-height: 1.8; font-weight: 400; }

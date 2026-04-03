@@ -1,0 +1,75 @@
+/* ---- ABOUT PAGE ---- */
+.about-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.about-content {
+  background: var(--white);
+  border: var(--border);
+  border-radius: 4px;
+  padding: 4rem 3.5rem;
+  box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
+  color: var(--black);
+}
+
+.about-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 3.5rem;
+  letter-spacing: 0.02em;
+  color: var(--black);
+  margin-bottom: 2.5rem;
+  border-bottom: 4px solid var(--coral);
+  display: inline-block;
+  padding-bottom: 0.5rem;
+}
+
+.about-content p {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: rgba(13,13,13,0.85);
+  margin-bottom: 2rem;
+}
+
+.about-content strong {
+  color: var(--electric);
+  font-weight: 800;
+}
+
+.btn-gofundme {
+  display: inline-block;
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.8rem;
+  letter-spacing: 0.05em;
+  background: var(--lime);
+  color: var(--black);
+  padding: 1rem 3rem;
+  border: var(--border);
+  border-radius: 4px;
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  margin: 2rem 0;
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.btn-gofundme:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-lg);
+  background: #00ff8e;
+}
+
+.signature {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem !important;
+  color: var(--coral) !important;
+  margin-top: 2rem;
+  border-top: 2px solid rgba(13,13,13,0.1);
+  padding-top: 2rem;
+}
+
+.fade-in {
+  animation: fade-in 0.3s ease-out;
+}
