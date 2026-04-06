@@ -1,12 +1,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --electric: #1B4DFF;   /* bold electric blue  — primary */
-  --lime:     #00E676;   /* neon lime green      — win / positive */
-  --coral:    #FF3D5A;   /* hot coral-red        — alert / heat */
-  --violet:   #7C3AED;   /* deep violet          — premium feel */
-  --cyan:     #00D4FF;   /* bright cyan          — accent */
-  --orange:   #FF6B1A;   /* punchy orange        — coming soon */
+  --electric:     #1B4DFF;   /* bold electric blue  — primary */
+  --electric-dim: #0F2E99;   /* darker electric     — hover states */
+  --lime:         #00E676;   /* neon lime green      — win / positive */
+  --coral:        #FF3D5A;   /* hot coral-red        — alert / heat */
+  --violet:       #7C3AED;   /* deep violet          — premium feel */
+  --cyan:         #00D4FF;   /* bright cyan          — accent */
+  --orange:       #FF6B1A;   /* punchy orange        — coming soon */
+  --amber:        #FFB800;   /* gold amber           — coins / XP */
+  --muted:        #8A8880;   /* muted grey           — secondary text */
 }
 
 /* Default Theme or Light Theme Variables */

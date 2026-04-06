@@ -1,96 +1,275 @@
-/* ---- DASHBOARD LAYOUT ---- */
-.dash-layout {
+/* ── LAYOUT ── */
+.app {
+  display: flex;
   min-height: 100vh;
-  background: var(--bg-color);
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 72px;
+  background: var(--black);
+  border-right: 2.5px solid rgba(255, 255, 255, 0.08);
   display: flex;
   flex-direction: column;
-}
-
-.dash-header {
-  background: var(--black);
-  border-bottom: 2px solid #2b3139;
-  padding: 0 2.5rem;
-  height: 80px;
-  display: flex;
-  justify-content: space-between;
   align-items: center;
+  padding: 1.25rem 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  gap: 0.5rem;
 }
 
-.dash-logo a {
+.sidebar-logo {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.6rem;
-  letter-spacing: 0.05em;
-  color: var(--white);
+  font-size: 1.1rem;
+  letter-spacing: 0.04em;
+  color: var(--electric);
+  margin-bottom: 1.5rem;
+  writing-mode: vertical-rl;
+  text-orientation: mixed;
+  transform: rotate(180deg);
+}
+
+.nav-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.15s;
+  color: rgba(255, 255, 255, 0.4);
+  border: 2px solid transparent;
+  position: relative;
   text-decoration: none;
 }
-.dash-logo .dot { color: var(--electric); }
 
-.dash-nav {
-  display: flex;
-  gap: 2.5rem;
+.nav-icon:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: white;
 }
 
-.dash-nav a {
+.nav-icon.active {
+  background: var(--electric);
+  color: white;
+  border-color: var(--electric);
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+.nav-icon .tooltip {
+  position: absolute;
+  left: 58px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--black);
+  color: white;
+  border: 2px solid var(--electric);
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
-  font-size: 1.05rem;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  text-decoration: none;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
-  transition: 0.2s;
+  text-transform: uppercase;
+  padding: 0.3rem 0.75rem;
+  white-space: nowrap;
+  border-radius: 3px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s;
+  z-index: 200;
 }
 
-.dash-nav a:hover,
-.dash-nav a.active {
-  color: var(--electric);
+.nav-icon:hover .tooltip {
+  opacity: 1;
 }
 
-.user-profile .avatar {
+.sidebar-bottom {
+  margin-top: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sidebar-bottom .avatar {
   width: 40px;
   height: 40px;
-  background: var(--coral);
-  color: var(--white);
+  border-radius: 50%;
+  background: var(--electric);
+  border: 2.5px solid var(--lime);
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.4rem;
-  border: 2px solid var(--coral);
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
 }
 
-.dash-actions {
+/* ── MAIN ── */
+.dash-main {
+  margin-left: 72px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* ── TOP BAR ── */
+.topbar {
+  background: white;
+  border-bottom: 2.5px solid var(--black);
+  padding: 0 2rem;
   display: flex;
   align-items: center;
-  gap: 1.5rem;
+  justify-content: space-between;
+  height: 64px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
 }
 
-.theme-toggle {
-  background: transparent;
-  border: 2px solid var(--black);
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.greeting {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
   color: var(--black);
+
+  span {
+    color: var(--electric);
+  }
+}
+
+.live-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: var(--black);
+  color: var(--lime);
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: 2px;
+}
+
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--lime);
+  animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}
+
+/* search */
+.search-wrap {
+  display: flex;
+  align-items: center;
+  border: 2.5px solid var(--black);
+  border-radius: 3px;
+  background: var(--off);
+  overflow: hidden;
+  box-shadow: 4px 4px 0 var(--black);
+
+  input {
+    border: none;
+    background: transparent;
+    outline: none;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.88rem;
+    padding: 0.5rem 1rem;
+    width: 240px;
+    color: var(--black);
+
+    &::placeholder { color: var(--muted); }
+  }
+}
+
+.search-btn {
+  background: var(--electric);
+  border: none;
+  border-left: 2.5px solid var(--black);
   width: 40px;
-  height: 40px;
+  height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 4px;
   cursor: pointer;
-  font-size: 1.2rem;
-  transition: all 0.2s;
-  padding: 0;
+  font-size: 0.9rem;
+  color: white;
+  transition: background 0.15s;
+
+  &:hover { background: var(--electric-dim); }
 }
 
-.theme-toggle:hover {
-  transform: translate(-2px, -2px);
-  box-shadow: 3px 3px 0 var(--black);
+/* stats chips */
+.stats-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.dash-main {
+.chip {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 2.5px solid var(--black);
+  border-radius: 3px;
+  padding: 0.35rem 0.75rem;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+  background: white;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 4px 4px 0 var(--black);
+
+  &:hover { transform: translate(-2px, -2px); box-shadow: 6px 6px 0 var(--black); }
+
+  .chip-icon { font-size: 1rem; }
+  .chip-sub { font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+
+  &.streak .chip-val { color: var(--coral); }
+  &.coins .chip-val { color: var(--amber); }
+  &.done .chip-val { color: var(--lime); }
+}
+
+/* ── CONTENT ── */
+.content {
+  padding: 2rem;
   flex: 1;
-  padding: 3rem 2.5rem;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
+  background: var(--off);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── MOBILE ── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .dash-main { margin-left: 0; }
+  .topbar { padding: 0 1rem; }
+  .search-wrap { display: none; }
+  .content { padding: 1rem; }
 }

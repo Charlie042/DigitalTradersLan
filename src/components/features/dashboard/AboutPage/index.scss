@@ -1,75 +1,391 @@
-/* ---- ABOUT PAGE ---- */
+/* ── ABOUT PAGE ── */
 .about-page {
-  max-width: 800px;
+  margin: -2rem;  /* bleed to edge of .content padding */
+}
+
+/* ── HERO BAND ── */
+.hero-band {
+  background: var(--electric);
+  border-bottom: 2.5px solid var(--black);
+  padding: 5rem 2.5rem 4rem;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: 'ABOUT';
+    position: absolute;
+    right: -1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16rem;
+    color: rgba(255, 255, 255, 0.05);
+    pointer-events: none;
+    line-height: 1;
+  }
+}
+
+.hero-band-inner {
+  max-width: 900px;
   margin: 0 auto;
-  padding: 2rem 0;
 }
 
-.about-content {
-  background: var(--white);
-  border: var(--border);
-  border-radius: 4px;
-  padding: 4rem 3.5rem;
-  box-shadow: 8px 8px 0 rgba(0,0,0,0.1);
-  color: var(--black);
+.page-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 28px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.6);
+  }
 }
 
-.about-title {
+.hero-band h1 {
   font-family: 'Bebas Neue', sans-serif;
-  font-size: 3.5rem;
+  font-size: clamp(3.5rem, 9vw, 7rem);
+  color: white;
+  line-height: 0.9;
+  letter-spacing: 0.02em;
+
+  .blk {
+    background: var(--black);
+    color: white;
+    padding: 0.02em 0.15em;
+    display: inline-block;
+  }
+}
+
+/* ── FOUNDERS ── */
+.founders-section {
+  background: var(--off);
+  border-bottom: 2.5px solid var(--black);
+  padding: 4rem 2.5rem;
+}
+
+.founders-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.founders-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+}
+
+.founder-card {
+  background: white;
+  border: 2.5px solid var(--black);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 5px 5px 0 var(--black);
+  transition: transform 0.18s, box-shadow 0.18s;
+
+  &:hover { transform: translate(-4px, -4px); box-shadow: 8px 8px 0 var(--black); }
+}
+
+.founder-photo {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-bottom: 2.5px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &.founder-photo-1 { background: linear-gradient(135deg, #1B4DFF 0%, #0F2E99 100%); }
+  &.founder-photo-2 { background: linear-gradient(135deg, #FF3D5A 0%, #c0002a 100%); }
+}
+
+.founder-initials {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 5rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.05em;
+}
+
+.founder-info {
+  padding: 1.25rem 1.5rem;
+}
+
+.founder-name {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.04em;
+  color: var(--black);
+  display: block;
+  margin-bottom: 0.4rem;
+  line-height: 1.1;
+}
+
+.founder-title {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  display: inline-block;
+  padding: 0.25rem 0.65rem;
+  border-radius: 2px;
+
+  &.founder-title-1 { background: var(--electric); color: white; }
+  &.founder-title-2 { background: var(--coral); color: white; }
+}
+
+/* ── STORY ── */
+.story-section {
+  background: white;
+  padding: 5rem 2.5rem;
+  border-bottom: 2.5px solid var(--black);
+}
+
+.story-inner {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.story-opener {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  line-height: 0.95;
   letter-spacing: 0.02em;
   color: var(--black);
   margin-bottom: 2.5rem;
-  border-bottom: 4px solid var(--coral);
-  display: inline-block;
-  padding-bottom: 0.5rem;
+
+  .blue { color: var(--electric); }
 }
 
-.about-content p {
-  font-family: 'Inter', sans-serif;
-  font-size: 1.15rem;
+.story-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  p {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: rgba(13, 13, 13, 0.75);
+    font-weight: 400;
+
+    strong { color: var(--black); font-weight: 600; }
+    em { font-style: italic; }
+  }
+}
+
+.pull-quote {
+  border-left: 5px solid var(--electric);
+  padding: 1rem 1.5rem;
+  background: #F0F4FF;
+  border-radius: 0 4px 4px 0;
+
+  p {
+    font-family: 'Barlow Condensed', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 1.25rem !important;
+    color: var(--electric) !important;
+    line-height: 1.4 !important;
+    letter-spacing: 0.01em;
+  }
+}
+
+.stat-callout {
+  background: var(--black);
+  color: white;
+  border: 2.5px solid var(--black);
+  border-radius: 4px;
+  padding: 1.75rem 2rem;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.stat-num-big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 4rem;
+  line-height: 1;
+  color: var(--lime);
+  white-space: nowrap;
+}
+
+.stat-callout-text {
+  flex: 1;
+
+  p {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.65);
+    line-height: 1.7;
+
+    strong { color: white; }
+  }
+}
+
+.future-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.future-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.85rem;
+  font-size: 0.98rem;
+  color: rgba(13, 13, 13, 0.7);
+  line-height: 1.6;
+}
+
+.f-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 3px;
+  border: 2.5px solid var(--black);
+  flex-shrink: 0;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.65rem;
+  font-weight: 700;
+
+  &.blue   { background: var(--electric); color: white; border-color: var(--electric); }
+  &.lime   { background: var(--lime); color: var(--black); border-color: var(--lime); }
+  &.coral  { background: var(--coral); color: white; border-color: var(--coral); }
+  &.violet { background: var(--violet); color: white; border-color: var(--violet); }
+}
+
+.sign-off {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  color: rgba(13, 13, 13, 0.45);
+  margin-top: 0.5rem;
+}
+
+/* ── GOFUNDME ── */
+.gofundme-section {
+  background: var(--electric);
+  border-top: 2.5px solid var(--black);
+  padding: 6rem 2.5rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+}
+
+.gf-corner-tl {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 140px;
+  height: 140px;
+  background: rgba(255, 255, 255, 0.06);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+}
+
+.gf-corner-br {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 140px;
+  height: 140px;
+  background: rgba(255, 255, 255, 0.06);
+  clip-path: polygon(100% 0, 100% 100%, 0 100%);
+}
+
+.gf-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 580px;
+  margin: 0 auto;
+}
+
+.gf-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.76rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+
+  &::before, &::after {
+    content: '';
+    display: block;
+    width: 24px;
+    height: 2px;
+    background: rgba(255, 255, 255, 0.4);
+  }
+}
+
+.gf-headline {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(3rem, 9vw, 6.5rem);
+  line-height: 0.9;
+  color: white;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.02em;
+
+  .blk {
+    background: var(--black);
+    padding: 0.02em 0.15em;
+    display: inline-block;
+  }
+}
+
+.gf-body {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
   line-height: 1.8;
-  color: rgba(13,13,13,0.85);
-  margin-bottom: 2rem;
-}
-
-.about-content strong {
-  color: var(--electric);
-  font-weight: 800;
+  margin-bottom: 2.5rem;
 }
 
 .btn-gofundme {
-  display: inline-block;
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 1.8rem;
-  letter-spacing: 0.05em;
-  background: var(--lime);
-  color: var(--black);
-  padding: 1rem 3rem;
-  border: var(--border);
-  border-radius: 4px;
-  text-decoration: none;
-  box-shadow: var(--shadow);
-  margin: 2rem 0;
-  transition: transform 0.15s, box-shadow 0.15s;
-}
-
-.btn-gofundme:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: var(--shadow-lg);
-  background: #00ff8e;
-}
-
-.signature {
   font-family: 'Barlow Condensed', sans-serif;
-  font-weight: 700;
-  font-size: 1.25rem !important;
-  color: var(--coral) !important;
-  margin-top: 2rem;
-  border-top: 2px solid rgba(13,13,13,0.1);
-  padding-top: 2rem;
+  font-weight: 900;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: white;
+  color: var(--electric);
+  padding: 1.1rem 3rem;
+  border: 2.5px solid var(--black);
+  border-radius: 3px;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 rgba(0, 0, 0, 0.25); }
 }
 
-.fade-in {
-  animation: fade-in 0.3s ease-out;
+.gf-fine {
+  font-size: 0.78rem;
+  color: rgba(255, 255, 255, 0.4);
+  margin-top: 1.25rem;
+  letter-spacing: 0.05em;
 }
