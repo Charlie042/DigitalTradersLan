@@ -12,6 +12,7 @@
   color: var(--black);
 }
 .logo .dot { color: var(--electric); }
+.landing-nav__right { display: flex; align-items: center; gap: 1.25rem; }
 .landing-nav ul { list-style: none; display: flex; gap: 2rem; align-items: center; }
 .landing-nav ul li a {
   font-family: 'Barlow Condensed', sans-serif;
@@ -29,7 +30,37 @@
 }
 .nav-cta:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--black) !important; color: var(--white) !important; }
 
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  background: transparent;
+  color: var(--black);
+  border: var(--border);
+  border-radius: 3px;
+  box-shadow: 2px 2px 0 var(--black);
+  cursor: pointer;
+  transition: transform 0.15s, box-shadow 0.15s, color 0.15s;
+}
+.theme-toggle:hover {
+  color: var(--electric);
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--black);
+}
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--electric);
+  outline-offset: 2px;
+}
+.theme-toggle__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
 @media (max-width: 800px) {
-  nav ul { display: none; }
-  nav { padding: 1rem 1.5rem; }
+  .landing-nav ul { display: none; }
+  .landing-nav { padding: 1rem 1.5rem; }
+  .landing-nav__right { gap: 0; }
 }

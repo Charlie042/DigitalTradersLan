@@ -7,8 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // ── MIDDLEWARE ──
+const allowedOrigin = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: allowedOrigin,
   methods: ['GET', 'POST'],
 }));
 app.use(express.json());
