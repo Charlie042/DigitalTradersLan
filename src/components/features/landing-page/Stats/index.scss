@@ -16,7 +16,8 @@
 .stat-block:nth-child(4) .stat-val { color: var(--lime); }
 .stat-lbl {
   font-family: 'Barlow Condensed', sans-serif; font-size: 0.82rem;
-  letter-spacing: 0.1em; text-transform: uppercase; color: rgba(13,13,13,0.4);
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim);
+  opacity: 0.85;
   margin-top: 0.4rem; display: block;
 }
 

@@ -2,6 +2,12 @@
 .features { background: var(--white); padding: 8rem 2.5rem; border-bottom: var(--border); }
 .features-inner { max-width: 1100px; margin: 0 auto; }
 .features-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 3rem; flex-wrap: wrap; gap: 1.5rem; }
+.features-lede {
+  max-width: 300px;
+  font-size: 0.95rem;
+  color: var(--text-dim);
+  line-height: 1.8;
+}
 .feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.85rem; }
 .feat-card {
   border: var(--border); border-radius: 4px; padding: 2rem 1.6rem;
@@ -21,7 +27,8 @@
 }
 .feat-num {
   font-family: 'Bebas Neue', sans-serif; font-size: 3.5rem;
-  color: rgba(13,13,13,0.06); position: absolute; bottom: -0.5rem; right: 1rem;
+  color: color-mix(in srgb, var(--black) 8%, transparent);
+  position: absolute; bottom: -0.5rem; right: 1rem;
   line-height: 1;
 }
 .feat-icon {
@@ -36,7 +43,7 @@
 .feat-card:nth-child(5) .feat-icon { background: var(--cyan); }
 .feat-card:nth-child(6) .feat-icon { background: var(--orange); }
 .feat-card h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.15rem; margin-bottom: 0.5rem; letter-spacing: 0.02em; }
-.feat-card p { font-size: 0.85rem; color: rgba(13,13,13,0.55); line-height: 1.7; }
+.feat-card p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.7; }
 
 @media (max-width: 800px) {
   .feat-grid { grid-template-columns: 1fr 1fr; }

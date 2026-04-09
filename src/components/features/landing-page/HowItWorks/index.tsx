@@ -5,7 +5,7 @@ export default function HowItWorks() {
     <section className="how" id="how">
       <div className="how-inner">
         <div className="how-header">
-          <div className="eyebrow" style={{ color: 'rgba(255,255,255,0.5)', justifyContent: 'center' }}><span className="bar" style={{ background: 'rgba(255,255,255,0.5)' }}></span>How it works</div>
+          <div className="eyebrow how-eyebrow"><span className="bar"></span>How it works</div>
           <h2 className="section-h" style={{ color: 'var(--white)', textAlign: 'center', fontSize: 'clamp(3rem,7vw,6rem)' }}>Four steps to <span style={{ color: 'var(--electric)' }}>your edge.</span></h2>
         </div>
         <div className="steps-grid">

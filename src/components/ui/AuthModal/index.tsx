@@ -110,7 +110,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
                   name="fullName"
                   type="text"
                   className="field-input"
-                  placeholder="Akuabata Okoye"
+                  placeholder="Your Name"
                   value={form.fullName}
                   onChange={handleChange}
                 />

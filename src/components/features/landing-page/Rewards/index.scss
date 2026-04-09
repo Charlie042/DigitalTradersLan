@@ -15,7 +15,7 @@
 .reward-card:nth-child(4) { border-top: 4px solid var(--lime); }
 .r-emoji { font-size: 2.2rem; display: block; margin-bottom: 0.85rem; }
 .reward-card h4 { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 0.04em; margin-bottom: 0.35rem; }
-.reward-card p { font-size: 0.82rem; color: rgba(13,13,13,0.5); line-height: 1.6; }
+.reward-card p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.6; }
 .coming-strip {
   margin-top: 1.25rem; background: var(--black); color: var(--white);
   border: var(--border); border-radius: 4px;
@@ -28,7 +28,7 @@
   background: var(--orange); color: var(--black);
   padding: 0.3rem 0.75rem; border-radius: 2px; white-space: nowrap;
 }
-.coming-strip p { font-size: 0.9rem; color: rgba(255,255,255,0.6); flex: 1; line-height: 1.65; }
+.coming-strip p { font-size: 0.9rem; color: var(--text-inverse-muted); flex: 1; line-height: 1.65; }
 
 @media (max-width: 800px) {
   .rewards-grid { grid-template-columns: 1fr 1fr; }

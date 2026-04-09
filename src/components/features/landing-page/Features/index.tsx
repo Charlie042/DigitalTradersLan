@@ -9,7 +9,7 @@ export default function Features() {
             <div className="eyebrow" style={{ color: 'var(--electric)' }}><span className="bar"></span>What you get</div>
             <h2 className="section-h" style={{ marginBottom: 0 }}>Three systems.<br/>One mission.</h2>
           </div>
-          <p style={{ maxWidth: '300px', fontSize: '0.95rem', color: 'rgba(13,13,13,0.6)', lineHeight: 1.8 }}>Everything you need to go from guessing to consistent — built with intention, tested with purpose.</p>
+          <p className="features-lede">Everything you need to go from guessing to consistent — built with intention, tested with purpose.</p>
         </div>
         <div className="feat-grid">
           <div className="feat-card">

@@ -1,9 +1,10 @@
 /* ---- DIFFERENTIATORS ---- */
 .diff { background: var(--black); padding: 8rem 2.5rem; border-bottom: var(--border); }
 .diff-inner { max-width: 900px; margin: 0 auto; text-align: center; }
-.diff-inner .eyebrow { color: var(--white); justify-content: center; }
+.diff-eyebrow { color: var(--text-inverse-subtle); justify-content: center; }
+.diff-eyebrow .bar { background: var(--text-inverse-subtle); }
 .diff-inner .section-h { color: var(--white); }
-.diff-inner .section-body { color: rgba(255,255,255,0.5); max-width: 420px; margin: 0 auto; }
+.diff-body { color: var(--text-inverse-muted); max-width: 420px; margin: 0 auto; }
 .tag-cloud { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; margin-top: 3rem; }
 .d-tag {
   font-family: 'Barlow Condensed', sans-serif;
@@ -18,4 +19,4 @@
 .d-tag.coral  { background: var(--coral); color: var(--white); border-color: var(--coral); box-shadow: 3px 3px 0 rgba(255,61,90,0.3); }
 .d-tag.lime   { background: var(--lime); color: var(--black); border-color: var(--lime); box-shadow: 3px 3px 0 rgba(0,230,118,0.25); }
 .d-tag.violet { background: var(--violet); color: var(--white); border-color: var(--violet); box-shadow: 3px 3px 0 rgba(124,58,237,0.3); }
-.d-tag.outline{ background: transparent; color: rgba(255,255,255,0.5); border-color: rgba(255,255,255,0.2); }
+.d-tag.outline { background: transparent; color: var(--text-inverse-muted); border-color: color-mix(in srgb, var(--text-inverse-muted) 35%, transparent); }

@@ -2,6 +2,8 @@
 .how { background: var(--black); color: var(--white); padding: 8rem 2.5rem; border-bottom: var(--border); }
 .how-inner { max-width: 1000px; margin: 0 auto; }
 .how-header { text-align: center; margin-bottom: 4.5rem; }
+.how-eyebrow { color: var(--text-inverse-subtle); justify-content: center; }
+.how-eyebrow .bar { background: var(--text-inverse-subtle); }
 .steps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.85rem; }
 .step-card {
   border-radius: 4px; padding: 2.25rem 2rem; border: 2.5px solid rgba(255,255,255,0.1);
@@ -26,7 +28,7 @@
 .step-card:nth-child(2) h3 { color: var(--lime); }
 .step-card:nth-child(3) h3 { color: var(--coral); }
 .step-card:nth-child(4) h3 { color: var(--violet); }
-.step-card p { font-size: 0.88rem; color: rgba(255,255,255,0.5); line-height: 1.75; }
+.step-card p { font-size: 0.88rem; color: var(--text-inverse-muted); line-height: 1.75; }
 
 @media (max-width: 800px) {
   .steps-grid { grid-template-columns: 1fr; gap: 2.5rem; }

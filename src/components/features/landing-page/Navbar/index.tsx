@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import './index.scss';
 import { useTheme } from '../../../../context/ThemeContext';
 import { NavbarProps } from './types';
@@ -19,8 +20,30 @@ function MoonIcon() {
   );
 }
 
+function HamburgerIcon({ open }: { open: boolean }) {
+  return (
+    <svg className="hamburger__icon" viewBox="0 0 24 24" aria-hidden fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round">
+      {open ? (
+        <>
+          <line x1="4" y1="4" x2="20" y2="20" />
+          <line x1="20" y1="4" x2="4" y2="20" />
+        </>
+      ) : (
+        <>
+          <line x1="3" y1="7" x2="21" y2="7" />
+          <line x1="3" y1="12" x2="21" y2="12" />
+          <line x1="3" y1="17" x2="21" y2="17" />
+        </>
+      )}
+    </svg>
+  );
+}
+
 export default function Navbar({ onOpenAuth }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const closeMenu = () => setMenuOpen(false);
 
   return (
     <header className="landing-nav">
@@ -45,7 +68,35 @@ export default function Navbar({ onOpenAuth }: NavbarProps) {
         >
           {theme === 'light' ? <MoonIcon /> : <SunIcon />}
         </button>
+        <button
+          type="button"
+          className="hamburger"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={menuOpen}
+        >
+          <HamburgerIcon open={menuOpen} />
+        </button>
       </div>
+
+      {menuOpen && (
+        <nav className="mobile-menu" aria-label="Mobile navigation">
+          <ul>
+            <li><a href="#features" onClick={closeMenu}>Features</a></li>
+            <li><a href="#how" onClick={closeMenu}>How it works</a></li>
+            <li><a href="#rewards" onClick={closeMenu}>Rewards</a></li>
+            <li>
+              <a
+                href="#cta"
+                className="nav-cta"
+                onClick={(e) => { e.preventDefault(); closeMenu(); onOpenAuth(); }}
+              >
+                Get Early Access
+              </a>
+            </li>
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }

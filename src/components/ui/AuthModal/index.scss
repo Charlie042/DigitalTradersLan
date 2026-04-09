@@ -50,7 +50,7 @@
   border: none;
   font-size: 1.4rem;
   cursor: pointer;
-  color: rgba(13, 13, 13, 0.35);
+  color: var(--text-dim);
   transition: color 0.15s;
   line-height: 1;
 
@@ -73,7 +73,7 @@
 
 .modal-sub {
   font-size: 0.92rem;
-  color: rgba(13, 13, 13, 0.6);
+  color: var(--text-dim);
   line-height: 1.65;
 }
 
@@ -106,7 +106,7 @@
   font-weight: 600;
   font-size: 0.72rem;
   letter-spacing: 0.06em;
-  color: rgba(13, 13, 13, 0.45);
+  color: var(--text-dim);
   text-transform: none;
 }
 
@@ -122,12 +122,12 @@
   transition: box-shadow 0.15s, border-color 0.15s;
   width: 100%;
 
-  &::placeholder { color: rgba(13, 13, 13, 0.35); }
+  &::placeholder { color: var(--text-dim); }
 
   &:focus {
     border-color: var(--electric);
     box-shadow: 3px 3px 0 var(--electric);
-    background: white;
+    background: var(--off);
   }
 }
 
@@ -171,7 +171,7 @@
 .field-check-label {
   font-family: 'Barlow', sans-serif;
   font-size: 0.88rem;
-  color: rgba(13, 13, 13, 0.75);
+  color: var(--text-dim);
   line-height: 1.5;
   cursor: pointer;
 }
@@ -216,7 +216,7 @@
 .modal-survey-nudge {
   text-align: center;
   font-size: 0.82rem;
-  color: rgba(13, 13, 13, 0.45);
+  color: var(--text-dim);
   padding-top: 0.25rem;
 }
 
@@ -275,6 +275,6 @@
 .modal-fine {
   margin-top: 1rem;
   font-size: 0.75rem;
-  color: rgba(13, 13, 13, 0.4);
+  color: var(--text-dim);
   letter-spacing: 0.04em;
 }

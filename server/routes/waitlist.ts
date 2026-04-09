@@ -1,6 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { db } from '../db/index.js';
 import { waitlist } from '../db/schema.js';
+import { sendWaitlistConfirmationEmail } from '../email/waitlistConfirmation.js';
 
 const router = Router();
 
@@ -19,9 +20,12 @@ router.post('/', async (req: Request, res: Response) => {
   }
 
   try {
+    const normalizedEmail = email.trim().toLowerCase();
+    const trimmedName = fullName.trim();
+
     await db.insert(waitlist).values({
-      fullName: fullName.trim(),
-      email: email.trim().toLowerCase(),
+      fullName: trimmedName,
+      email: normalizedEmail,
       country: country?.trim() || null,
       wantsUpdates: wantsUpdates ?? true,
       hearAbout: hearAbout?.trim() || null,
@@ -29,6 +33,15 @@ router.post('/', async (req: Request, res: Response) => {
     });
 
     res.status(201).json({ message: 'You have been added to the waitlist.' });
+
+    void sendWaitlistConfirmationEmail({
+      to: normalizedEmail,
+      fullName: trimmedName,
+    }).then((result) => {
+      if (!result.sent) {
+        console.warn('[waitlist] Confirmation email not sent:', result.reason);
+      }
+    });
   } catch (err: unknown) {
     // Postgres unique violation = 23505
     if (err instanceof Error && 'code' in err && (err as NodeJS.ErrnoException).code === '23505') {

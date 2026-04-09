@@ -13,7 +13,7 @@
   color: var(--coral);
 }
 .prob-card h4 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 1.05rem; margin-bottom: 0.35rem; }
-.prob-card p { font-size: 0.82rem; color: rgba(13,13,13,0.55); line-height: 1.65; }
+.prob-card p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.65; }
 
 @media (max-width: 800px) {
   .prob-inner { grid-template-columns: 1fr; gap: 2.5rem; }
