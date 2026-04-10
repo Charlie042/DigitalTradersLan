@@ -101,7 +101,7 @@ export async function sendWaitlistConfirmationEmail(opts: {
 
   const resend = new Resend(apiKey);
   const from =
-    process.env.EMAIL_FROM?.trim() || 'DigitalTradersLab <noreply.digitaltraderslab.online>';
+    process.env.EMAIL_FROM?.trim() || 'DigitalTradersLab <noreply@digitaltraderslab.online>';
 
   const { data, error } = await resend.emails.send({
     from,

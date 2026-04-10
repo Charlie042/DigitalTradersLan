@@ -10,7 +10,9 @@ footer {
 .f-links a {
   font-family: 'Barlow Condensed', sans-serif; font-weight: 700; font-size: 0.8rem;
   letter-spacing: 0.1em; text-transform: uppercase;
-  color: rgba(255,255,255,0.35); text-decoration: none; transition: color 0.2s;
+  color: var(--text-inverse-muted);
+  text-decoration: none;
+  transition: color 0.2s;
 }
 .f-links a:hover { color: var(--electric); }
-.f-copy { font-size: 0.72rem; color: rgba(255,255,255,0.2); }
+.f-copy { font-size: 0.72rem; color: var(--text-inverse-subtle); }
