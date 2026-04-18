@@ -10,40 +10,110 @@ const router = Router();
 
 const STATE_COOKIE = 'oauth_state';
 
+const isProdLike =
+  process.env.NODE_ENV === 'production' || Boolean(process.env.RAILWAY_ENVIRONMENT);
+
+/** Public site URL (no trailing slash). Required in production for correct post-OAuth redirect. */
 function frontendBase(): string {
-  return (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+  const raw = process.env.FRONTEND_URL?.trim();
+  if (raw) {
+    const trimmed = raw.replace(/\/$/, '');
+    if (/^https?:\/\//i.test(trimmed)) {
+      return trimmed;
+    }
+    return `https://${trimmed}`;
+  }
+  if (isProdLike) {
+    console.warn(
+      '[auth] FRONTEND_URL is unset — OAuth will redirect to localhost. Set FRONTEND_URL to your live site (e.g. https://www.yourdomain.com).',
+    );
+  }
+  return 'http://localhost:5173';
+}
+
+/** API origin from GOOGLE_REDIRECT_URI (e.g. https://xxx.up.railway.app). */
+function apiOrigin(): string | null {
+  const r = process.env.GOOGLE_REDIRECT_URI?.trim();
+  if (!r) return null;
+  try {
+    return new URL(r).origin;
+  } catch {
+    return null;
+  }
+}
+
+function frontendOrigin(): string | null {
+  if (!process.env.FRONTEND_URL?.trim()) return null;
+  try {
+    return new URL(frontendBase()).origin;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * SPA on another host than the API (typical: Vercel + Railway). Session cookies must use
+ * SameSite=None; Secure or browsers won't attach them to cross-origin fetch(..., { credentials }).
+ */
+function isCrossOriginAuth(): boolean {
+  const fe = frontendOrigin();
+  const api = apiOrigin();
+  if (!fe || !api) return false;
+  return fe !== api;
 }
 
 function sessionCookieOptions() {
-  const secure = process.env.NODE_ENV === 'production';
+  const cross = isCrossOriginAuth();
+  const secure = cross || isProdLike;
+  const sameSite = cross ? ('none' as const) : ('lax' as const);
   return {
     httpOnly: true,
     secure,
-    sameSite: 'lax' as const,
+    sameSite,
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   };
 }
 
 function stateCookieOptions() {
-  const secure = process.env.NODE_ENV === 'production';
+  const cross = isCrossOriginAuth();
+  const secure = cross || isProdLike;
+  const sameSite = cross ? ('none' as const) : ('lax' as const);
   return {
     httpOnly: true,
     secure,
-    sameSite: 'lax' as const,
+    sameSite,
     path: '/',
     maxAge: 10 * 60 * 1000,
   };
 }
 
 function clearCookieOptions() {
-  const secure = process.env.NODE_ENV === 'production';
+  const cross = isCrossOriginAuth();
+  const secure = cross || isProdLike;
+  const sameSite = cross ? ('none' as const) : ('lax' as const);
   return {
     httpOnly: true,
     secure,
-    sameSite: 'lax' as const,
+    sameSite,
     path: '/',
   };
+}
+
+/** Full URL after successful Google login (defaults to FRONTEND_URL + /dashboard). */
+function postLoginRedirectUrl(): string {
+  const override = process.env.POST_LOGIN_REDIRECT?.trim();
+  if (override) {
+    try {
+      return new URL(override).toString();
+    } catch {
+      console.warn('[auth] POST_LOGIN_REDIRECT is not a valid URL; ignoring.');
+    }
+  }
+  const base = frontendBase();
+  const pathRaw = process.env.POST_LOGIN_PATH?.trim() || '/dashboard';
+  const path = pathRaw.startsWith('/') ? pathRaw : `/${pathRaw}`;
+  return `${base}${path}`;
 }
 
 async function getSessionUserId(req: Request): Promise<number | null> {
@@ -166,7 +236,9 @@ router.get('/google/callback', async (req: Request, res: Response) => {
       email,
     });
     res.cookie(COOKIE_NAME, sessionToken, sessionCookieOptions());
-    res.redirect(302, `${base}/dashboard`);
+    const nextUrl = postLoginRedirectUrl();
+    console.log('[auth/google/callback] redirect →', nextUrl);
+    res.redirect(302, nextUrl);
   } catch (e) {
     console.error('[auth/google/callback]', e);
     fail('server_error');
