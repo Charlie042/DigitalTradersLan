@@ -168,7 +168,7 @@ router.get('/google/callback', async (req: Request, res: Response) => {
       email,
     });
     res.cookie(COOKIE_NAME, sessionToken, sessionCookieOptions());
-    res.redirect(302, `${base}/?auth=success`);
+    res.redirect(302, `${base}/dashboard`);
   } catch (e) {
     console.error('[auth/google/callback]', e);
     fail('server_error');

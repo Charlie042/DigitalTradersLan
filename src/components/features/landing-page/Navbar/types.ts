@@ -1,10 +1,4 @@
-export type AuthUser = {
-  id: number;
-  email: string;
-  name: string | null;
-  picture: string | null;
-  hasGoogleRefreshToken: boolean;
-};
+export type { AuthUser } from '../../../../types/auth';
 
 export interface NavbarProps {
   onOpenAuth: () => void;
