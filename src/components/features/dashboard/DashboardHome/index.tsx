@@ -51,7 +51,7 @@ export default function DashboardHome() {
     <div className="dash-home">
 
       {/* ── FIRE MODE BANNER ── */}
-      <div className="fire-banner">
+      <Link to="/dashboard/fire-mode" className="fire-banner" style={{ textDecoration: 'none' }}>
         <div className="fire-left">
           <div className="fire-tag">Quick Play</div>
           <div className="fire-title">🔥 Random <span className="hl">Fire Mode</span></div>
@@ -59,14 +59,14 @@ export default function DashboardHome() {
         </div>
         <div className="fire-right">
           <div className="fire-emoji">⚡</div>
-          <button className="btn-fire">Play Now</button>
+          <div className="btn-fire">Play Now</div>
         </div>
-      </div>
+      </Link>
 
       {/* ── TOPICS ── */}
       <div className="section-header">
         <div className="section-label">Choose a Topic</div>
-        <div className="see-all">View All →</div>
+        <Link to="/dashboard/topics" className="see-all">View All →</Link>
       </div>
 
       <div className="topic-grid">

@@ -1,12 +1,7 @@
-import './index.scss';
-
 export default function Footer() {
   return (
     <footer>
-      <div className="f-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-        <img src="/logo.png" alt="Logo" style={{ width: '48px', height: '48px', borderRadius: '4px' }} />
-        <div>DigitalTraders<span className="dot">Lab</span></div>
-      </div>
+      <div className="f-logo">DigitalTraders<span className="dot">Lab</span></div>
       <div className="f-links">
         <a href="#">Features</a>
         <a href="#">How it works</a>
