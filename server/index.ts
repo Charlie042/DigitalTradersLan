@@ -13,13 +13,33 @@ const PORT = process.env.PORT || 3001;
 app.set('trust proxy', 1);
 
 // ── MIDDLEWARE ──
-const allowedOrigin = (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/$/, '');
+/** Comma-separated list, e.g. https://www.site.com,https://site.com (www vs non-www). */
+function parseCorsOrigins(): string[] {
+  const raw = process.env.CORS_ORIGINS || process.env.FRONTEND_URL || 'http://localhost:5173';
+  return raw
+    .split(',')
+    .map((s) => s.trim().replace(/\/$/, ''))
+    .filter(Boolean);
+}
 
-app.use(cors({
-  origin: allowedOrigin,
-  credentials: true,
-  methods: ['GET', 'POST', 'OPTIONS'],
-}));
+app.use(
+  cors({
+    origin(origin, callback) {
+      const allowed = parseCorsOrigins();
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      if (allowed.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(null, false);
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'OPTIONS'],
+  }),
+);
 app.use(cookieParser());
 app.use(express.json());
 
