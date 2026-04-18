@@ -1,0 +1,8 @@
+# Railway: set this service’s **Root Directory** to `server` (folder containing this file)
+# so `npm run build` runs `tsc` and `dist/` includes `/api/auth/*` routes.
+[build]
+builder = "nixpacks"
+buildCommand = "npm install && npm run build"
+
+[deploy]
+startCommand = "npm start"
