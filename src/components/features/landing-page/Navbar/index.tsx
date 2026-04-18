@@ -39,15 +39,21 @@ function HamburgerIcon({ open }: { open: boolean }) {
   );
 }
 
-export default function Navbar({ onOpenAuth }: NavbarProps) {
+export default function Navbar({ onOpenAuth, user, onSignOut, googleAuthUrl }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
 
+  const displayName = user?.name?.trim() || user?.email || '';
+
   return (
     <header className="landing-nav">
-      <div className="logo">DigitalTraders<span className="dot">Lab</span></div>
+      <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+        <img src="/logo.png" alt="Logo" style={{ width: '48px', height: '48px', borderRadius: '4px' }} />
+        {/* We can hide the text if you prefer, or keep it. I left it here for now. */}
+        <div>DigitalTraders<span className="dot">Lab</span></div>
+      </div>
       <div className="landing-nav__right">
         <ul>
           <li><a href="#features">Features</a></li>
@@ -57,6 +63,23 @@ export default function Navbar({ onOpenAuth }: NavbarProps) {
             <a href="#cta" className="nav-cta" onClick={(e) => { e.preventDefault(); onOpenAuth(); }}>
               Get Early Access
             </a>
+          </li>
+          <li>
+            {user ? (
+              <span className="nav-auth">
+                {user.picture && (
+                  <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
+                )}
+                <span className="nav-auth__name" title={user.email}>{displayName}</span>
+                <button type="button" className="nav-auth__out" onClick={() => { void onSignOut(); }}>
+                  Sign out
+                </button>
+              </span>
+            ) : (
+              <a href={googleAuthUrl} className="nav-google">
+                Sign in with Google
+              </a>
+            )}
           </li>
         </ul>
         <button
@@ -93,6 +116,27 @@ export default function Navbar({ onOpenAuth }: NavbarProps) {
               >
                 Get Early Access
               </a>
+            </li>
+            <li>
+              {user ? (
+                <div className="nav-auth nav-auth--mobile">
+                  {user.picture && (
+                    <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
+                  )}
+                  <span className="nav-auth__name">{displayName}</span>
+                  <button
+                    type="button"
+                    className="nav-auth__out"
+                    onClick={() => { closeMenu(); void onSignOut(); }}
+                  >
+                    Sign out
+                  </button>
+                </div>
+              ) : (
+                <a href={googleAuthUrl} className="nav-google" onClick={closeMenu}>
+                  Sign in with Google
+                </a>
+              )}
             </li>
           </ul>
         </nav>

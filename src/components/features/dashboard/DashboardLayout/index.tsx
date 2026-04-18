@@ -37,12 +37,15 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     <div className="app">
       {/* ── SIDEBAR ── */}
       <aside className="sidebar">
-        <div className="sidebar-logo">DTL</div>
+        <div className="sidebar-logo" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          <img src="/logo.png" alt="Logo" style={{ width: '68px', height: '68px', borderRadius: '4px' }} />
+          {/* <span>DTL</span> */}
+        </div>
 
         <NavIcon icon="🎮" label="Dashboard" to="/dashboard" />
-        <NavIcon icon="📊" label="Analytics" />
-        <NavIcon icon="🏆" label="Leaderboard" />
-        <NavIcon icon="📓" label="Journal" />
+        {/* <NavIcon icon="📊" label="Analytics" /> */}
+        {/* <NavIcon icon="🏆" label="Leaderboard" /> */}
+        {/* <NavIcon icon="📓" label="Journal" /> */}
         <NavIcon icon="ℹ️" label="About" to="/dashboard/about" />
 
         <div className="sidebar-bottom">
