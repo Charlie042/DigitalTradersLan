@@ -1,6 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { getApiBase } from '../lib/api';
 import type { AuthUser } from '../types/auth';
+import {
+  authFetchHeaders,
+  consumeSessionTokenFromHash,
+  setStoredSessionToken,
+} from '../lib/authToken';
 
 export function useAuthUser() {
   const [user, setUser] = useState<AuthUser | null>(null);
@@ -8,9 +13,14 @@ export function useAuthUser() {
   const apiBase = getApiBase();
 
   useEffect(() => {
+    consumeSessionTokenFromHash();
     let cancelled = false;
     setLoading(true);
-    void fetch(`${apiBase}/api/auth/me`, { credentials: 'include' })
+    const headers: HeadersInit = { ...authFetchHeaders() };
+    void fetch(`${apiBase}/api/auth/me`, {
+      credentials: 'include',
+      headers,
+    })
       .then((r) => r.json())
       .then((data: { user: AuthUser | null }) => {
         if (!cancelled) setUser(data.user ?? null);
@@ -27,12 +37,15 @@ export function useAuthUser() {
   }, [apiBase]);
 
   const signOut = useCallback(async () => {
+    const headers: HeadersInit = { ...authFetchHeaders() };
     try {
       await fetch(`${apiBase}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
+        headers,
       });
     } finally {
+      setStoredSessionToken(null);
       setUser(null);
     }
   }, [apiBase]);

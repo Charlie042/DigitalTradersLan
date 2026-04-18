@@ -130,8 +130,16 @@ function postLoginRedirectUrl(): string {
 }
 
 async function getSessionUserId(req: Request): Promise<number | null> {
-  const token = req.cookies?.[COOKIE_NAME];
-  if (!token || typeof token !== 'string') return null;
+  let token: string | null = null;
+  const authHeader = req.headers.authorization;
+  if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
+    token = authHeader.slice(7).trim();
+  }
+  if (!token) {
+    const c = req.cookies?.[COOKIE_NAME];
+    token = typeof c === 'string' ? c : null;
+  }
+  if (!token) return null;
   const payload = await verifySessionToken(token);
   if (!payload) return null;
   const id = Number.parseInt(payload.sub, 10);
@@ -250,8 +258,18 @@ router.get('/google/callback', async (req: Request, res: Response) => {
     });
     res.cookie(COOKIE_NAME, sessionToken, sessionCookieOptions());
     const nextUrl = postLoginRedirectUrl();
-    console.log('[auth/google/callback] redirect →', nextUrl);
-    res.redirect(302, nextUrl);
+    // Hash is never sent as Referer to third parties; SPA reads it and uses Authorization Bearer.
+    // Needed when browsers block third-party cookies between your domain and the API (Railway).
+    let redirectTo: string;
+    try {
+      const u = new URL(nextUrl);
+      u.hash = `session=${encodeURIComponent(sessionToken)}`;
+      redirectTo = u.toString();
+    } catch {
+      redirectTo = `${nextUrl}#session=${encodeURIComponent(sessionToken)}`;
+    }
+    console.log('[auth/google/callback] redirect →', nextUrl, '(+ session hash)');
+    res.redirect(302, redirectTo);
   } catch (e) {
     console.error('[auth/google/callback]', e);
     fail('server_error');

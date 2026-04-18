@@ -38,6 +38,7 @@ app.use(
     },
     credentials: true,
     methods: ['GET', 'POST', 'OPTIONS'],
+    allowedHeaders: ['Authorization', 'Content-Type'],
   }),
 );
 app.use(cookieParser());
