@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './index.scss';
 import { AuthModalProps } from './types';
-import { getApiBase } from '../../../lib/api';
 
 const hearAboutOptions = [
   'Twitter / X',
@@ -50,7 +49,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setError('');
     setLoading(true);
     try {
-      const res = await fetch(`${getApiBase()}/api/waitlist`, {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/waitlist`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
