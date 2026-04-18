@@ -1,8 +1,6 @@
 import AuthModal from '../../ui/AuthModal';
 import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
-import { getApiBase } from '../../../lib/api';
-import { useAuthUser } from '../../../hooks/useAuthUser';
 import Hero from './Hero';
 import Ticker from './Ticker';
 import Problem from './Problem';
@@ -16,8 +14,6 @@ import Footer from './Footer';
 
 export default function LandingPage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const { user, signOut } = useAuthUser();
-  const apiBase = getApiBase();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -31,12 +27,7 @@ export default function LandingPage() {
 
   return (
     <>
-      <Navbar
-        onOpenAuth={() => setIsAuthModalOpen(true)}
-        user={user}
-        onSignOut={signOut}
-        googleAuthUrl={`${apiBase}/api/auth/google`}
-      />
+      <Navbar onOpenAuth={() => setIsAuthModalOpen(true)} />
       <main>
         <Hero onOpenAuth={() => setIsAuthModalOpen(true)} />
         <Ticker type="electric" />

@@ -39,12 +39,11 @@ function HamburgerIcon({ open }: { open: boolean }) {
   );
 }
 
-export default function Navbar({ onOpenAuth, user, onSignOut, googleAuthUrl }: NavbarProps) {
+export default function Navbar({ onOpenAuth }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
-  const displayName = user?.name?.trim() || user?.email || '';
 
   return (
     <header className="landing-nav">
@@ -58,23 +57,6 @@ export default function Navbar({ onOpenAuth, user, onSignOut, googleAuthUrl }: N
             <a href="#cta" className="nav-cta" onClick={(e) => { e.preventDefault(); onOpenAuth(); }}>
               Get Early Access
             </a>
-          </li>
-          <li>
-            {user ? (
-              <span className="nav-auth">
-                {user.picture && (
-                  <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
-                )}
-                <span className="nav-auth__name" title={user.email}>{displayName}</span>
-                <button type="button" className="nav-auth__out" onClick={() => { void onSignOut(); }}>
-                  Sign out
-                </button>
-              </span>
-            ) : (
-              <a href={googleAuthUrl} className="nav-google">
-                Sign in with Google
-              </a>
-            )}
           </li>
         </ul>
         <button
@@ -111,27 +93,6 @@ export default function Navbar({ onOpenAuth, user, onSignOut, googleAuthUrl }: N
               >
                 Get Early Access
               </a>
-            </li>
-            <li>
-              {user ? (
-                <div className="nav-auth nav-auth--mobile">
-                  {user.picture && (
-                    <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
-                  )}
-                  <span className="nav-auth__name">{displayName}</span>
-                  <button
-                    type="button"
-                    className="nav-auth__out"
-                    onClick={() => { closeMenu(); void onSignOut(); }}
-                  >
-                    Sign out
-                  </button>
-                </div>
-              ) : (
-                <a href={googleAuthUrl} className="nav-google" onClick={closeMenu}>
-                  Sign in with Google
-                </a>
-              )}
             </li>
           </ul>
         </nav>
