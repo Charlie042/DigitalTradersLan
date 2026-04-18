@@ -1,7 +1,8 @@
-import Cursor from '../../ui/Cursor';
 import AuthModal from '../../ui/AuthModal';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
+import { getApiBase } from '../../../lib/api';
+import { useAuthUser } from '../../../hooks/useAuthUser';
 import Hero from './Hero';
 import Ticker from './Ticker';
 import Problem from './Problem';
@@ -15,10 +16,27 @@ import Footer from './Footer';
 
 export default function LandingPage() {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const { user, signOut } = useAuthUser();
+  const apiBase = getApiBase();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get('auth') === 'success' || params.get('auth') === 'error') {
+      const next = new URL(window.location.href);
+      next.searchParams.delete('auth');
+      next.searchParams.delete('reason');
+      window.history.replaceState({}, '', next.pathname + next.search);
+    }
+  }, []);
 
   return (
     <>
-      <Navbar onOpenAuth={() => setIsAuthModalOpen(true)} />
+      <Navbar
+        onOpenAuth={() => setIsAuthModalOpen(true)}
+        user={user}
+        onSignOut={signOut}
+        googleAuthUrl={`${apiBase}/api/auth/google`}
+      />
       <main>
         <Hero onOpenAuth={() => setIsAuthModalOpen(true)} />
         <Ticker type="electric" />
