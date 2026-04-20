@@ -1,12 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { mockUserStats, mockTopics } from '../../../../data/mockDatabase';
+import { topicAccents } from '../../../../data/topicAccents';
 import './index.scss';
-
-const topicAccents: Record<string, { color: string; progress: number }> = {
-  'candlesticks':    { color: '#1B4DFF', progress: 65 },
-  'market-structure':{ color: '#FF3D5A', progress: 30 },
-  'liquidity':       { color: '#7C3AED', progress: 10 },
-};
 
 const recentChallenges = [
   {
@@ -51,7 +46,7 @@ export default function DashboardHome() {
     <div className="dash-home">
 
       {/* ── FIRE MODE BANNER ── */}
-      <div className="fire-banner">
+      <Link to="/dashboard/fire-mode" className="fire-banner">
         <div className="fire-left">
           <div className="fire-tag">Quick Play</div>
           <div className="fire-title">🔥 Random <span className="hl">Fire Mode</span></div>
@@ -59,14 +54,14 @@ export default function DashboardHome() {
         </div>
         <div className="fire-right">
           <div className="fire-emoji">⚡</div>
-          <button className="btn-fire">Play Now</button>
+          <span className="btn-fire">Play Now</span>
         </div>
-      </div>
+      </Link>
 
       {/* ── TOPICS ── */}
       <div className="section-header">
         <div className="section-label">Choose a Topic</div>
-        <div className="see-all">View All →</div>
+        <Link to="/dashboard/topics" className="see-all">View All →</Link>
       </div>
 
       <div className="topic-grid">

@@ -1,0 +1,57 @@
+.dash-placeholder {
+  animation: dashPlaceholderIn 0.35s ease both;
+  max-width: 520px;
+}
+
+@keyframes dashPlaceholderIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.dash-placeholder__back {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--electric);
+  text-decoration: none;
+  border-bottom: 2px solid var(--electric);
+  padding-bottom: 2px;
+  display: inline-block;
+  margin-bottom: 1.5rem;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.dash-placeholder__card {
+  background: white;
+  border: 2.5px solid var(--black);
+  border-radius: 4px;
+  padding: 2rem 1.75rem;
+  box-shadow: 4px 4px 0 var(--black);
+}
+
+.dash-placeholder__emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.dash-placeholder__title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2rem;
+  letter-spacing: 0.03em;
+  color: var(--black);
+  margin: 0 0 0.75rem;
+  line-height: 1.05;
+}
+
+.dash-placeholder__body {
+  font-size: 0.95rem;
+  color: var(--muted);
+  margin: 0;
+  line-height: 1.5;
+}

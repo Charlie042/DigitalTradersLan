@@ -1,4 +1,4 @@
-import { Link } from '@tanstack/react-router';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { mockUserStats } from '../../../../data/mockDatabase';
 import { useAuthUser } from '../../../../hooks/useAuthUser';
 import { avatarInitial, displayFirstName, greetingTimeLabel } from '../../../../lib/userDisplay';
@@ -35,8 +35,14 @@ function NavIcon({ icon, label, to, active }: NavIconProps) {
 }
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuthUser();
+  const navigate = useNavigate();
+  const { user, loading, signOut } = useAuthUser();
   const greetName = loading ? '…' : displayFirstName(user);
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: '/' });
+  };
 
   return (
     <div className="app">
@@ -45,13 +51,22 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div className="sidebar-logo">DTL</div>
 
         <NavIcon icon="🎮" label="Dashboard" to="/dashboard" />
-        <NavIcon icon="📊" label="Analytics" />
-        <NavIcon icon="🏆" label="Leaderboard" />
-        <NavIcon icon="📓" label="Journal" />
+        {/* <NavIcon icon="📊" label="Analytics" to="/dashboard/analytics" />
+        <NavIcon icon="🏆" label="Leaderboard" to="/dashboard/leaderboard" />
+        <NavIcon icon="📓" label="Journal" to="/dashboard/journal" /> */}
         <NavIcon icon="ℹ️" label="About" to="/dashboard/about" />
 
         <div className="sidebar-bottom">
-          <NavIcon icon="⚙️" label="Settings" />
+          {/* <NavIcon icon="⚙️" label="Settings" to="/dashboard/settings" /> */}
+          <button
+            type="button"
+            className="nav-icon nav-icon--signout"
+            onClick={() => { void handleSignOut(); }}
+            aria-label="Sign out"
+          >
+            🚪
+            <span className="tooltip">Sign out</span>
+          </button>
           <div
             className={`avatar${user?.picture ? ' avatar--photo' : ''}`}
             title={user?.email ?? (loading ? 'Loading…' : 'Account')}

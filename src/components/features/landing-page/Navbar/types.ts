@@ -1,10 +1,6 @@
 import type { AuthUser } from '../../../../types/auth';
 
-export type { AuthUser };
-
 export interface NavbarProps {
-  onOpenAuth: () => void;
+  onOpenSignIn: () => void;
   user: AuthUser | null;
-  onSignOut: () => void;
-  googleAuthUrl: string;
 }

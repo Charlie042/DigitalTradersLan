@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
 import { mockTopics, mockUserStats, Challenge } from '../../../../data/mockDatabase';
+import { buildFireModeChallenge, FIRE_MODE_CHALLENGE_ID } from '../../../../lib/fireModeChallenge';
 import { ChallengePreviewProps } from './types';
 import './index.scss';
 
@@ -8,13 +9,19 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
   const navigate = useNavigate();
 
   let foundChallenge: Challenge | null = null;
-  for (const topic of mockTopics) {
-    for (const sub of topic.subTopics) {
-      const chal = sub.challenges.find(c => c.id === challengeId);
-      if (chal) { foundChallenge = chal; break; }
+  if (challengeId === FIRE_MODE_CHALLENGE_ID) {
+    foundChallenge = buildFireModeChallenge();
+  } else {
+    for (const topic of mockTopics) {
+      for (const sub of topic.subTopics) {
+        const chal = sub.challenges.find(c => c.id === challengeId);
+        if (chal) { foundChallenge = chal; break; }
+      }
+      if (foundChallenge) break;
     }
-    if (foundChallenge) break;
   }
+
+  const isFireMode = challengeId === FIRE_MODE_CHALLENGE_ID;
 
   const [hasStarted, setHasStarted] = useState(false);
   const [currentQIndex, setCurrentQIndex] = useState(0);
@@ -24,7 +31,13 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
   const [score, setScore] = useState(0);
 
   if (!foundChallenge) {
-    return <div style={{ padding: '2rem' }}>Challenge not found!</div>;
+    return (
+      <div style={{ padding: '2rem' }}>
+        {isFireMode
+          ? 'No questions available for Fire Mode yet — add challenges with questions in the catalog.'
+          : 'Challenge not found!'}
+      </div>
+    );
   }
 
   if (foundChallenge.questions.length === 0) {
@@ -52,7 +65,7 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
         <div className="complete-card">
           <div className="complete-top">
             <span className="complete-emoji">🏆</span>
-            <div className="complete-title">Challenge Complete!</div>
+            <div className="complete-title">{isFireMode ? 'Fire Mode complete!' : 'Challenge Complete!'}</div>
             <div className="complete-sub">{foundChallenge.title}</div>
           </div>
           <div className="complete-stats">
@@ -95,7 +108,7 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
       <div className="cp-screen cp-screen-preview">
         <div className="preview-card">
           <div className="preview-top">
-            <div className="preview-eyebrow">Challenge Preview</div>
+            <div className="preview-eyebrow">{isFireMode ? 'Quick Play' : 'Challenge Preview'}</div>
             <div className="preview-title">{foundChallenge.title}</div>
             <div className="preview-desc">{foundChallenge.description}</div>
           </div>
@@ -123,7 +136,7 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
           </div>
           <div className="preview-actions">
             <button className="btn-start-challenge" onClick={() => setHasStarted(true)}>
-              Start Challenge ⚡
+              {isFireMode ? 'Start Fire Mode ⚡' : 'Start Challenge ⚡'}
             </button>
             <button className="btn-maybe" onClick={() => navigate({ to: '/dashboard' })}>
               Not now

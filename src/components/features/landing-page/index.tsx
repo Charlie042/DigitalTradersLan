@@ -15,8 +15,8 @@ import CTA from './CTA';
 import Footer from './Footer';
 
 export default function LandingPage() {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const { user, signOut } = useAuthUser();
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const { user } = useAuthUser();
   const apiBase = getApiBase();
 
   useEffect(() => {
@@ -32,13 +32,11 @@ export default function LandingPage() {
   return (
     <>
       <Navbar
-        onOpenAuth={() => setIsAuthModalOpen(true)}
+        onOpenSignIn={() => setIsSignInModalOpen(true)}
         user={user}
-        onSignOut={signOut}
-        googleAuthUrl={`${apiBase}/api/auth/google`}
       />
       <main>
-        <Hero onOpenAuth={() => setIsAuthModalOpen(true)} />
+        <Hero user={user} onOpenSignIn={() => setIsSignInModalOpen(true)} />
         <Ticker type="electric" />
         <Ticker type="black" />
         <Problem />
@@ -47,10 +45,14 @@ export default function LandingPage() {
         <Rewards />
         <Stats />
         <Differentiators />
-        <CTA onOpenAuth={() => setIsAuthModalOpen(true)} />
+        <CTA />
       </main>
       <Footer />
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AuthModal
+        isOpen={isSignInModalOpen}
+        onClose={() => setIsSignInModalOpen(false)}
+        googleAuthUrl={`${apiBase}/api/auth/google`}
+      />
     </>
   );
 }

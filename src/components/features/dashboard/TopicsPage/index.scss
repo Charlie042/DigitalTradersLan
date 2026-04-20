@@ -1,0 +1,55 @@
+@import '../topic-grid.scss';
+
+.topics-page {
+  animation: topicGridFadeUp 0.4s ease both;
+}
+
+.topics-topbar {
+  margin-bottom: 1.25rem;
+}
+
+.topics-back {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--electric);
+  text-decoration: none;
+  border-bottom: 2px solid var(--electric);
+  padding-bottom: 2px;
+
+  &:hover {
+    opacity: 0.85;
+  }
+}
+
+.topics-header {
+  margin-bottom: 1.5rem;
+}
+
+.topics-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 800;
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+
+.topics-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  line-height: 1;
+  letter-spacing: 0.03em;
+  color: var(--black);
+  margin: 0 0 0.35rem;
+}
+
+.topics-sub {
+  font-size: 0.92rem;
+  color: var(--muted);
+  margin: 0;
+  max-width: 36rem;
+}

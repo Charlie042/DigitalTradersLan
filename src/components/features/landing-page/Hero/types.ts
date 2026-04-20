@@ -1,3 +1,6 @@
+import type { AuthUser } from '../../../../types/auth';
+
 export interface HeroProps {
-  onOpenAuth: () => void;
+  user: AuthUser | null;
+  onOpenSignIn: () => void;
 }
