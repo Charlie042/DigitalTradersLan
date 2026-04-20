@@ -5,6 +5,7 @@ import { db } from '../db/index.js';
 import { users } from '../db/schema.js';
 import { COOKIE_NAME, signSessionToken, verifySessionToken } from '../lib/session.js';
 import { getOAuth2Client, GOOGLE_SCOPES } from '../lib/googleOAuth.js';
+import { sendWelcomeEmail } from '../email/welcomeEmail.js';
 
 const router = Router();
 
@@ -229,6 +230,15 @@ router.get('/google/callback', async (req: Request, res: Response) => {
         })
         .returning({ id: users.id });
       userId = inserted.id;
+
+      void sendWelcomeEmail({
+        to: email,
+        displayName: name ?? email,
+      }).then((result) => {
+        if (!result.sent) {
+          console.warn('[auth] Welcome email not sent:', result.reason);
+        }
+      });
     }
 
     const sessionToken = await signSessionToken({
