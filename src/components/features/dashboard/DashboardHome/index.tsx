@@ -1,47 +1,26 @@
 import { Link } from '@tanstack/react-router';
-import { mockUserStats, mockTopics } from '../../../../data/mockDatabase';
 import { topicAccents } from '../../../../data/topicAccents';
 import './index.scss';
+import { useGetTopics, useGetStats, useGetRecentChallenges, useGetTopicProgress } from '../hooks/useTopic';
+import { TopicCardSkeleton, ChallengeRowSkeleton, StatCardSkeleton } from '../Skeleton';
 
-const recentChallenges = [
-  {
-    icon: '🕯️',
-    iconBg: '#E8EEFF',
-    name: 'Bullish Engulfing — The Setup',
-    topic: 'Candlesticks',
-    questions: 8,
-    difficulty: 'Medium' as const,
-    reward: 120,
-    status: 'continue' as const,
-    challengeId: 'chal-bull-med-1',
-  },
-  {
-    icon: '📐',
-    iconBg: '#FFE8EC',
-    name: 'Break of Structure — Identifying BOS',
-    topic: 'Market Structure',
-    questions: 10,
-    difficulty: 'Easy' as const,
-    reward: 80,
-    status: 'start' as const,
-    challengeId: 'chal-bull-easy-1',
-  },
-  {
-    icon: '⚖️',
-    iconBg: '#F0EBFF',
-    name: 'Position Sizing Masterclass',
-    topic: 'Risk Management',
-    questions: 6,
-    difficulty: 'Hard' as const,
-    reward: 200,
-    status: 'done' as const,
-    challengeId: 'chal-bull-easy-1',
-  },
-];
+const difficultyIconBg: Record<string, string> = {
+  easy: '#E8FFEE',
+  medium: '#E8EEFF',
+  hard: '#FFE8EC',
+};
 
 const streakDays = [true, true, true, false, false, false, false]; // last 7 days
 
 export default function DashboardHome() {
+  const { data: topics, isLoading, error } = useGetTopics();
+  const { data: stats } = useGetStats();
+  const { data: recentChallenges, isLoading: recentLoading } = useGetRecentChallenges();
+  const { data: topicProgress } = useGetTopicProgress();
+
+  const accuracy = stats && stats.submissionCount > 0
+    ? Math.round((stats.correctSubmissionCount / stats.submissionCount) * 100)
+    : 0;
   return (
     <div className="dash-home">
 
@@ -65,10 +44,11 @@ export default function DashboardHome() {
       </div>
 
       <div className="topic-grid">
-        {mockTopics.map((topic) => {
-          const accent = topicAccents[topic.id] ?? { color: '#8A8880', progress: 0 };
-          const totalChallenges = topic.subTopics.reduce((acc, s) => acc + s.challenges.length, 0);
-          const progressLabel = accent.progress === 0 ? 'Not started' : `${accent.progress}% complete`;
+        {topics?.map((topic) => {
+          const accent = topicAccents[topic.id] ?? { color: '#8A8880' };
+          const totalChallenges = topic.subTopics.reduce((acc, s) => acc + (s.challenges?.length ?? 0), 0);
+          const progress = topicProgress?.[topic.id] ?? 0;
+          const progressLabel = progress === 0 ? 'Not started' : `${progress}% complete`;
 
           return (
             <Link
@@ -82,12 +62,14 @@ export default function DashboardHome() {
               <div className="topic-name">{topic.title}</div>
               <div className="topic-count">{topic.subTopics.length} subtopics · {totalChallenges} challenges</div>
               <div className="topic-progress-wrap">
-                <div className="topic-progress-bar" style={{ width: `${accent.progress}%`, background: accent.color }} />
+                <div className="topic-progress-bar" style={{ width: `${progress}%`, background: accent.color }} />
               </div>
               <div className="topic-prog-label">{progressLabel}</div>
             </Link>
           );
         })}
+
+        {isLoading && [0, 1, 2, 3].map((i) => <TopicCardSkeleton key={i} />)}
       </div>
 
       {/* ── CONTINUE PLAYING ── */}
@@ -96,24 +78,30 @@ export default function DashboardHome() {
       </div>
 
       <div className="challenges-list">
-        {recentChallenges.map((ch, i) => (
+        {recentLoading && [0, 1, 2].map((i) => <ChallengeRowSkeleton key={i} />)}
+        {!recentLoading && recentChallenges?.length === 0 && (
+          <div style={{ padding: '1rem', opacity: 0.5 }}>No challenges started yet — pick a topic above to begin.</div>
+        )}
+        {recentChallenges?.map((ch) => (
           <Link
-            key={i}
+            key={ch.id}
             to="/dashboard/challenge/$challengeId"
-            params={{ challengeId: ch.challengeId }}
+            params={{ challengeId: ch.id }}
             className="challenge-row"
           >
-            <div className="ch-icon" style={{ background: ch.iconBg }}>{ch.icon}</div>
+            <div className="ch-icon" style={{ background: difficultyIconBg[ch.difficulty] ?? '#E8EEFF' }}>
+              {ch.topicIcon ?? '📖'}
+            </div>
             <div className="ch-info">
-              <div className="ch-name">{ch.name}</div>
+              <div className="ch-name">{ch.title}</div>
               <div className="ch-meta">
-                {ch.topic} · {ch.questions} questions
-                <span className={`ch-diff diff-${ch.difficulty.toLowerCase()}`}>{ch.difficulty}</span>
+                {ch.topicTitle} · {ch.questionCount} questions
+                <span className={`ch-diff diff-${ch.difficulty}`}>{ch.difficulty}</span>
               </div>
             </div>
-            <div className="ch-reward">🪙 +{ch.reward} XP</div>
+            <div className="ch-reward">🪙 +{ch.rewardXp} XP</div>
             <div className={`ch-status status-${ch.status}`}>
-              {ch.status === 'done' ? '✓ Done' : ch.status === 'continue' ? 'Continue' : 'Start'}
+              {ch.status === 'done' ? '✓ Done' : 'Continue'}
             </div>
           </Link>
         ))}
@@ -121,32 +109,37 @@ export default function DashboardHome() {
 
       {/* ── BOTTOM STATS ── */}
       <div className="bottom-stats">
-        <div className="stat-card">
-          <div className="stat-card-label">🔥 Current Streak</div>
-          <span className="stat-card-val" style={{ color: 'var(--coral)' }}>{mockUserStats.streak}</span>
-          <div className="stat-card-sub">days in a row</div>
-          <div className="streak-dots">
-            {streakDays.map((on, i) => (
-              <div key={i} className={`streak-dot ${i === 6 ? 'today' : on ? 'on' : 'off'}`} />
-            ))}
-          </div>
-        </div>
+        {!stats ? (
+          [0, 1, 2].map((i) => <StatCardSkeleton key={i} />)
+        ) : (
+          <>
+            <div className="stat-card">
+              <div className="stat-card-label">🔥 Current Streak</div>
+              <span className="stat-card-val" style={{ color: 'var(--coral)' }}>{stats.streak}</span>
+              <div className="stat-card-sub">days in a row</div>
+              <div className="streak-dots">
+                {streakDays.map((on, i) => (
+                  <div key={i} className={`streak-dot ${i === 6 ? 'today' : on ? 'on' : 'off'}`} />
+                ))}
+              </div>
+            </div>
 
-        <div className="stat-card">
-          <div className="stat-card-label">🎯 Accuracy</div>
-          <span className="stat-card-val" style={{ color: 'var(--lime)' }}>72%</span>
-          <div className="stat-card-sub">across all challenges</div>
-          <div className="acc-bar-wrap">
-            <div className="acc-bar" style={{ width: '72%' }} />
-          </div>
-        </div>
+            <div className="stat-card">
+              <div className="stat-card-label">🎯 Accuracy</div>
+              <span className="stat-card-val" style={{ color: 'var(--lime)' }}>{accuracy}%</span>
+              <div className="stat-card-sub">across all challenges</div>
+              <div className="acc-bar-wrap">
+                <div className="acc-bar" style={{ width: `${accuracy}%` }} />
+              </div>
+            </div>
 
-        <div className="stat-card">
-          <div className="stat-card-label">🪙 Total Coins</div>
-          <span className="stat-card-val" style={{ color: 'var(--amber)' }}>{mockUserStats.totalCoins.toLocaleString()}</span>
-          <div className="stat-card-sub">+120 earned today</div>
-          <div className="coins-tag">Funded Account: 4,550 away</div>
-        </div>
+            <div className="stat-card">
+              <div className="stat-card-label">🪙 Total XP</div>
+              <span className="stat-card-val" style={{ color: 'var(--amber)' }}>{stats.totalXp.toLocaleString()}</span>
+              <div className="stat-card-sub">{stats.challengesCompleted} challenges completed</div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

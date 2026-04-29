@@ -1,4 +1,4 @@
-@import '../topic-grid.scss';
+@use '../topic-grid.scss';
 
 /* ── DASHBOARD HOME ── */
 .dash-home {
@@ -356,3 +356,5 @@
 @media (max-width: 768px) {
   .bottom-stats { grid-template-columns: 1fr; }
 }
+
+

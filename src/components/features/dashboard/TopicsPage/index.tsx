@@ -1,9 +1,13 @@
 import { Link } from '@tanstack/react-router';
-import { mockTopics } from '../../../../data/mockDatabase';
 import { topicAccents } from '../../../../data/topicAccents';
+import { useGetTopics, useGetTopicProgress } from '../hooks/useTopic';
+import { TopicCardSkeleton } from '../Skeleton';
 import './index.scss';
 
 export default function TopicsPage() {
+  const { data: topics, isLoading } = useGetTopics();
+  const { data: topicProgress } = useGetTopicProgress();
+
   return (
     <div className="topics-page">
       <div className="topics-topbar">
@@ -16,10 +20,12 @@ export default function TopicsPage() {
       </div>
 
       <div className="topic-grid">
-        {mockTopics.map((topic) => {
-          const accent = topicAccents[topic.id] ?? { color: '#8A8880', progress: 0 };
-          const totalChallenges = topic.subTopics.reduce((acc, s) => acc + s.challenges.length, 0);
-          const progressLabel = accent.progress === 0 ? 'Not started' : `${accent.progress}% complete`;
+        {isLoading && [0, 1, 2, 3, 4, 5].map((i) => <TopicCardSkeleton key={i} />)}
+        {topics?.map((topic) => {
+          const accent = topicAccents[topic.id] ?? { color: '#8A8880' };
+          const totalChallenges = topic.subTopics.reduce((acc, s) => acc + (s.challenges?.length ?? 0), 0);
+          const progress = topicProgress?.[topic.id] ?? 0;
+          const progressLabel = progress === 0 ? 'Not started' : `${progress}% complete`;
 
           return (
             <Link
@@ -33,7 +39,7 @@ export default function TopicsPage() {
               <div className="topic-name">{topic.title}</div>
               <div className="topic-count">{topic.subTopics.length} subtopics · {totalChallenges} challenges</div>
               <div className="topic-progress-wrap">
-                <div className="topic-progress-bar" style={{ width: `${accent.progress}%`, background: accent.color }} />
+                <div className="topic-progress-bar" style={{ width: `${progress}%`, background: accent.color }} />
               </div>
               <div className="topic-prog-label">{progressLabel}</div>
             </Link>

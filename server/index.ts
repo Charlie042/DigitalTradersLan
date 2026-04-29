@@ -5,6 +5,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import waitlistRouter from './routes/waitlist.js';
 import authRouter from './routes/auth.js';
+import catalogRouter from './routes/catalog.js';
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -29,6 +30,7 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', authRouter);
+app.use('/api/catalog', catalogRouter);
 app.use('/api/waitlist', waitlistRouter);
 
 // ── START ──

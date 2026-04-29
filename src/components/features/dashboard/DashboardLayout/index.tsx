@@ -1,6 +1,6 @@
 import { Link, useNavigate } from '@tanstack/react-router';
-import { mockUserStats } from '../../../../data/mockDatabase';
 import { useAuthUser } from '../../../../hooks/useAuthUser';
+import { useGetStats } from '../hooks/useTopic';
 import { avatarInitial, displayFirstName, greetingTimeLabel } from '../../../../lib/userDisplay';
 import './index.scss';
 
@@ -37,6 +37,7 @@ function NavIcon({ icon, label, to, active }: NavIconProps) {
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
   const { user, loading, signOut } = useAuthUser();
+  const { data: stats } = useGetStats();
   const greetName = loading ? '…' : displayFirstName(user);
 
   const handleSignOut = async () => {
@@ -111,16 +112,16 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
           <div className="stats-chips">
             <div className="chip streak">
               <span className="chip-icon">🔥</span>
-              <span className="chip-val">{mockUserStats.streak}</span>
+              <span className="chip-val">{stats?.streak ?? 0}</span>
               <span className="chip-sub">day streak</span>
             </div>
             <div className="chip coins">
               <span className="chip-icon">🪙</span>
-              <span className="chip-val">{mockUserStats.totalCoins.toLocaleString()}</span>
+              <span className="chip-val">{(stats?.totalXp ?? 0).toLocaleString()}</span>
             </div>
             <div className="chip done">
               <span className="chip-icon">✅</span>
-              <span className="chip-val">{mockUserStats.challengesCompleted}</span>
+              <span className="chip-val">{stats?.challengesCompleted ?? 0}</span>
               <span className="chip-sub">done</span>
             </div>
           </div>

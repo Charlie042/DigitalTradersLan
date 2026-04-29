@@ -3,7 +3,7 @@ import crypto from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { users } from '../db/schema.js';
-import { COOKIE_NAME, signSessionToken, verifySessionToken } from '../lib/session.js';
+import { COOKIE_NAME, getSessionUserIdFromRequest, signSessionToken } from '../lib/session.js';
 import { getOAuth2Client, GOOGLE_SCOPES } from '../lib/googleOAuth.js';
 import { sendWelcomeEmail } from '../email/welcomeEmail.js';
 
@@ -115,15 +115,6 @@ function postLoginRedirectUrl(): string {
   const pathRaw = process.env.POST_LOGIN_PATH?.trim() || '/dashboard';
   const path = pathRaw.startsWith('/') ? pathRaw : `/${pathRaw}`;
   return `${base}${path}`;
-}
-
-async function getSessionUserId(req: Request): Promise<number | null> {
-  const token = req.cookies?.[COOKIE_NAME];
-  if (!token || typeof token !== 'string') return null;
-  const payload = await verifySessionToken(token);
-  if (!payload) return null;
-  const id = Number.parseInt(payload.sub, 10);
-  return Number.isFinite(id) ? id : null;
 }
 
 router.get('/google', (_req: Request, res: Response) => {
@@ -256,7 +247,7 @@ router.get('/google/callback', async (req: Request, res: Response) => {
 });
 
 router.get('/me', async (req: Request, res: Response) => {
-  const userId = await getSessionUserId(req);
+  const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ user: null });
     return;
@@ -282,7 +273,7 @@ router.get('/me', async (req: Request, res: Response) => {
 });
 
 router.post('/google/refresh', async (req: Request, res: Response) => {
-  const userId = await getSessionUserId(req);
+  const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Not signed in.' });
     return;

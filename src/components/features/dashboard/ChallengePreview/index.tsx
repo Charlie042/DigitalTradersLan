@@ -1,52 +1,89 @@
 import { useState } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import { mockTopics, mockUserStats, Challenge } from '../../../../data/mockDatabase';
-import { buildFireModeChallenge, FIRE_MODE_CHALLENGE_ID } from '../../../../lib/fireModeChallenge';
+import { FIRE_MODE_CHALLENGE_ID } from '../../../../lib/fireModeChallenge';
 import { ChallengePreviewProps } from './types';
+import { useGetChallenge, useGetFireMode, useGetStats, CatalogQuestion } from '../hooks/useTopic';
+import { ChallengePreviewSkeleton } from '../Skeleton';
+import { useApiPost } from '@/services/api/hooks';
 import './index.scss';
+
+interface SubmissionRequest {
+  questionId: number;
+  answer: { selectedOptionId: number };
+  timeTakenSeconds?: number;
+}
+
+interface SubmissionResponse {
+  ok: boolean;
+  status: 'correct' | 'incorrect';
+  score: number;
+  correct: boolean;
+  explanation: string | null;
+}
+
+interface CompleteRequest {
+  correct: number;
+  total: number;
+}
+
+interface CompleteResponse {
+  ok: boolean;
+  rewardXp: number;
+  firstCompletion: boolean;
+}
 
 export default function ChallengePreview({ challengeId }: ChallengePreviewProps) {
   const navigate = useNavigate();
-
-  let foundChallenge: Challenge | null = null;
-  if (challengeId === FIRE_MODE_CHALLENGE_ID) {
-    foundChallenge = buildFireModeChallenge();
-  } else {
-    for (const topic of mockTopics) {
-      for (const sub of topic.subTopics) {
-        const chal = sub.challenges.find(c => c.id === challengeId);
-        if (chal) { foundChallenge = chal; break; }
-      }
-      if (foundChallenge) break;
-    }
-  }
-
   const isFireMode = challengeId === FIRE_MODE_CHALLENGE_ID;
+
+  // Always call hooks unconditionally (React rules)
+  const { data: apiChallenge, isLoading: challengeLoading } = useGetChallenge(challengeId, { enabled: !isFireMode });
+  const { data: fireChallenge, isLoading: fireLoading } = useGetFireMode();
+  const { data: stats } = useGetStats();
+  const submitAnswer = useApiPost<SubmissionRequest, SubmissionResponse>();
+  const completeChallenge = useApiPost<CompleteRequest, CompleteResponse>();
 
   const [hasStarted, setHasStarted] = useState(false);
   const [currentQIndex, setCurrentQIndex] = useState(0);
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedKey, setSelectedKey] = useState<string | null>(null);
   const [isRevealed, setIsRevealed] = useState(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   const [isComplete, setIsComplete] = useState(false);
   const [score, setScore] = useState(0);
+  const [explanation, setExplanation] = useState<string | null>(null);
 
-  if (!foundChallenge) {
-    return (
-      <div style={{ padding: '2rem' }}>
-        {isFireMode
-          ? 'No questions available for Fire Mode yet — add challenges with questions in the catalog.'
-          : 'Challenge not found!'}
-      </div>
-    );
+  const resetState = () => {
+    setIsComplete(false);
+    setHasStarted(false);
+    setCurrentQIndex(0);
+    setScore(0);
+    setSelectedKey(null);
+    setIsRevealed(false);
+    setIsCorrect(null);
+    setExplanation(null);
+  };
+
+  const isLoading = isFireMode ? fireLoading : challengeLoading;
+  const challenge = isFireMode ? fireChallenge : apiChallenge;
+
+  if (isLoading) {
+    return <ChallengePreviewSkeleton />;
   }
 
-  if (foundChallenge.questions.length === 0) {
+  if (!challenge) {
+    return <div style={{ padding: '2rem' }}>Challenge not found!</div>;
+  }
+
+  const { title, description, difficulty, rewardXp } = challenge;
+  const questions = challenge.questions as CatalogQuestion[];
+
+  if (questions.length === 0) {
     return (
       <div className="cp-screen cp-screen-preview">
         <div className="preview-card">
           <div className="preview-top">
             <div className="preview-eyebrow">Under Construction</div>
-            <div className="preview-title">{foundChallenge.title}</div>
+            <div className="preview-title">{title}</div>
             <div className="preview-desc">This challenge has no questions yet — check back soon.</div>
           </div>
           <div className="preview-actions">
@@ -57,20 +94,20 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
     );
   }
 
-  /* ── SCREEN 5: COMPLETE ── */
+  /* ── COMPLETE SCREEN ── */
   if (isComplete) {
-    const acc = Math.round((score / foundChallenge.questions.length) * 100);
+    const acc = Math.round((score / questions.length) * 100);
     return (
       <div className="cp-screen cp-screen-complete">
         <div className="complete-card">
           <div className="complete-top">
             <span className="complete-emoji">🏆</span>
             <div className="complete-title">{isFireMode ? 'Fire Mode complete!' : 'Challenge Complete!'}</div>
-            <div className="complete-sub">{foundChallenge.title}</div>
+            <div className="complete-sub">{title}</div>
           </div>
           <div className="complete-stats">
             <div className="cs-item">
-              <span className="cs-val" style={{ color: 'var(--electric)' }}>{score}/{foundChallenge.questions.length}</span>
+              <span className="cs-val" style={{ color: 'var(--electric)' }}>{score}/{questions.length}</span>
               <span className="cs-label">Correct</span>
             </div>
             <div className="cs-item">
@@ -78,14 +115,14 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
               <span className="cs-label">Accuracy</span>
             </div>
             <div className="cs-item">
-              <span className="cs-val" style={{ color: 'var(--coral)' }}>{mockUserStats.streak}🔥</span>
+              <span className="cs-val" style={{ color: 'var(--coral)' }}>{stats?.streak ?? 0}🔥</span>
               <span className="cs-label">Streak</span>
             </div>
           </div>
           <div className="complete-reward">
             <div className="cr-left">
               <div className="cr-label">Coins earned</div>
-              <div className="cr-coins">🪙 +{foundChallenge.reward} XP</div>
+              <div className="cr-coins">🪙 +{rewardXp} XP</div>
             </div>
             <div className="cr-badge">🎖️ Keep going!</div>
           </div>
@@ -93,7 +130,7 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
             <button className="btn-next-challenge" onClick={() => navigate({ to: '/dashboard' })}>
               Back to Dashboard →
             </button>
-            <button className="btn-home" onClick={() => { setIsComplete(false); setHasStarted(false); setCurrentQIndex(0); setScore(0); setSelectedOption(null); setIsRevealed(false); }}>
+            <button className="btn-home" onClick={resetState}>
               Try Again
             </button>
           </div>
@@ -102,24 +139,24 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
     );
   }
 
-  /* ── SCREEN 3: PREVIEW ── */
+  /* ── PREVIEW SCREEN ── */
   if (!hasStarted) {
     return (
       <div className="cp-screen cp-screen-preview">
         <div className="preview-card">
           <div className="preview-top">
             <div className="preview-eyebrow">{isFireMode ? 'Quick Play' : 'Challenge Preview'}</div>
-            <div className="preview-title">{foundChallenge.title}</div>
-            <div className="preview-desc">{foundChallenge.description}</div>
+            <div className="preview-title">{title}</div>
+            <div className="preview-desc">{description}</div>
           </div>
           <div className="preview-meta">
             <div className="pm-item">
               <div className="pm-label">Difficulty</div>
-              <div className={`pm-val diff-${foundChallenge.difficulty.toLowerCase()}`}>{foundChallenge.difficulty}</div>
+              <div className={`pm-val diff-${difficulty.toLowerCase()}`}>{difficulty}</div>
             </div>
             <div className="pm-item">
               <div className="pm-label">Questions</div>
-              <div className="pm-val">{foundChallenge.questions.length} questions</div>
+              <div className="pm-val">{questions.length} questions</div>
             </div>
             <div className="pm-item">
               <div className="pm-label">Type</div>
@@ -127,12 +164,12 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
             </div>
             <div className="pm-item">
               <div className="pm-label">Reward</div>
-              <div className="pm-val" style={{ color: 'var(--amber)' }}>+{foundChallenge.reward} XP</div>
+              <div className="pm-val" style={{ color: 'var(--amber)' }}>+{rewardXp} XP</div>
             </div>
           </div>
           <div className="preview-reward">
             <div className="cr-label">Reward on completion</div>
-            <div className="cr-coins">🪙 +{foundChallenge.reward} XP</div>
+            <div className="cr-coins">🪙 +{rewardXp} XP</div>
           </div>
           <div className="preview-actions">
             <button className="btn-start-challenge" onClick={() => setHasStarted(true)}>
@@ -147,87 +184,106 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
     );
   }
 
-  /* ── SCREEN 4: QUESTION ── */
-  const currentQ = foundChallenge.questions[currentQIndex];
-  const pct = (currentQIndex / foundChallenge.questions.length) * 100;
-
-  const handleOptionClick = (index: number) => {
-    if (isRevealed) return;
-    setSelectedOption(index);
-    setIsRevealed(true);
-    if (index === currentQ.correctAnswerIndex) {
-      setScore(s => s + 1);
-    }
-  };
+  /* ── QUESTION SCREEN ── */
+  const pct = (currentQIndex / questions.length) * 100;
+  const letters = ['A', 'B', 'C', 'D'];
+  const isSubmitting = submitAnswer.isPending;
 
   const handleNext = () => {
-    if (currentQIndex < foundChallenge.questions.length - 1) {
-      setCurrentQIndex(currentQIndex + 1);
-      setSelectedOption(null);
+    if (currentQIndex < questions.length - 1) {
+      setCurrentQIndex(q => q + 1);
+      setSelectedKey(null);
       setIsRevealed(false);
+      setIsCorrect(null);
+      setExplanation(null);
     } else {
+      if (!isFireMode) {
+        completeChallenge.mutate({
+          url: `/api/catalog/challenges/${challengeId}/complete`,
+          data: { correct: score, total: questions.length },
+        });
+      }
       setIsComplete(true);
     }
   };
 
-  const letters = ['A', 'B', 'C', 'D'];
+  const currentQ = questions[currentQIndex] as CatalogQuestion;
+
+  const handleApiClick = (optionId: number) => {
+    if (isRevealed || isSubmitting) return;
+    setSelectedKey(String(optionId));
+    submitAnswer.mutate(
+      {
+        url: '/api/catalog/submissions',
+        data: { questionId: currentQ.dbId, answer: { selectedOptionId: optionId } },
+      },
+      {
+        onSuccess: (res) => {
+          setIsCorrect(res.data.correct);
+          setExplanation(res.data.explanation);
+          setIsRevealed(true);
+          if (res.data.correct) setScore(s => s + 1);
+        },
+        onError: () => {
+          setSelectedKey(null);
+        },
+      },
+    );
+  };
 
   return (
     <div className="cp-screen cp-screen-question">
       <div className="q-progress-bar-wrap">
         <div className="q-progress-bar" style={{ width: `${pct}%` }} />
       </div>
-
       <div className="q-content">
         <div className="q-header">
           <div className="q-counter">
-            {String(currentQIndex + 1).padStart(2, '0')} <span>/ {foundChallenge.questions.length}</span>
+            {String(currentQIndex + 1).padStart(2, '0')} <span>/ {questions.length}</span>
           </div>
           <div className={`q-type-tag q-type-${currentQ.type}`}>
             {currentQ.type === 'chart' ? '📊 Chart Based' : '📖 Theory'}
           </div>
         </div>
-
         <div className="q-card">
           <div className="q-text">{currentQ.text}</div>
-
           <div className="answers">
             {currentQ.options.map((opt, i) => {
+              const isSelected = selectedKey === String(opt.id);
               let cls = 'answer-btn';
+              if (isSubmitting && isSelected) cls += ' loading';
               if (isRevealed) {
-                if (i === currentQ.correctAnswerIndex) cls += ' correct';
-                else if (i === selectedOption) cls += ' wrong';
+                if (isSelected && isCorrect) cls += ' correct';
+                else if (isSelected && !isCorrect) cls += ' wrong';
                 else cls += ' disabled';
               }
               return (
                 <button
-                  key={i}
+                  key={opt.id}
                   className={cls}
-                  onClick={() => handleOptionClick(i)}
-                  disabled={isRevealed}
+                  onClick={() => handleApiClick(opt.id)}
+                  disabled={isRevealed || isSubmitting}
                 >
                   <div className="answer-letter">{letters[i]}</div>
-                  <div className="answer-text">{opt}</div>
+                  <div className="answer-text">{opt.text}</div>
                 </button>
               );
             })}
           </div>
         </div>
-
         {isRevealed && (
-          <div className={`feedback-panel ${selectedOption === currentQ.correctAnswerIndex ? 'correct-fb' : 'wrong-fb'}`}>
+          <div className={`feedback-panel ${isCorrect ? 'correct-fb' : 'wrong-fb'}`}>
             <div className="fb-header">
-              <span className="fb-icon">{selectedOption === currentQ.correctAnswerIndex ? '✅' : '❌'}</span>
-              <span className="fb-result">{selectedOption === currentQ.correctAnswerIndex ? 'Correct!' : 'Not quite.'}</span>
+              <span className="fb-icon">{isCorrect ? '✅' : '❌'}</span>
+              <span className="fb-result">{isCorrect ? 'Correct!' : 'Not quite.'}</span>
             </div>
-            <div className="fb-explanation">{currentQ.explanation}</div>
+            {explanation && <div className="fb-explanation">{explanation}</div>}
           </div>
         )}
-
         <div className="q-actions">
           {isRevealed && (
             <button className="btn-next-q" onClick={handleNext}>
-              {currentQIndex < foundChallenge.questions.length - 1 ? 'Next Question →' : 'Complete Challenge ✓'}
+              {currentQIndex < questions.length - 1 ? 'Next Question →' : 'Complete Challenge ✓'}
             </button>
           )}
         </div>
