@@ -1,6 +1,49 @@
+import { useState } from 'react';
 import './index.scss';
+import charles from "@/charles.jpeg"
+import Akuabata from "@/Akuabata.jpeg"
+const RATING_EMOJIS = ['😤', '😕', '😊', '😄', '🔥'];
 
 export default function AboutPage() {
+  const [feedbackOpen, setFeedbackOpen] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [rating, setRating] = useState(0);
+  const [errors, setErrors] = useState<Record<string, boolean>>({});
+
+  const openModal = () => {
+    setFeedbackOpen(true);
+    setIsSuccess(false);
+    setName('');
+    setEmail('');
+    setMessage('');
+    setRating(0);
+    setErrors({});
+    setIsSubmitting(false);
+  };
+
+  const closeModal = () => setFeedbackOpen(false);
+
+  const pulse = (field: string) => {
+    setErrors(e => ({ ...e, [field]: true }));
+    setTimeout(() => setErrors(e => ({ ...e, [field]: false })), 1500);
+  };
+
+  const handleSubmit = () => {
+    if (!name.trim()) { pulse('name'); return; }
+    if (!email.trim() || !email.includes('@')) { pulse('email'); return; }
+    if (!message.trim()) { pulse('message'); return; }
+    setIsSubmitting(true);
+    // TODO: replace with real API call
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setIsSuccess(true);
+    }, 1800);
+  };
+
   return (
     <div className="about-page">
 
@@ -18,7 +61,7 @@ export default function AboutPage() {
           <div className="founders-grid">
             <div className="founder-card">
               <div className="founder-photo founder-photo-1">
-                <span className="founder-initials">AO</span>
+                <img src={Akuabata} alt="Akuabata Okoye" className="founder-photo-img" width={800} height={800} />
               </div>
               <div className="founder-info">
                 <span className="founder-name">Akuabata Okoye</span>
@@ -27,7 +70,7 @@ export default function AboutPage() {
             </div>
             <div className="founder-card">
               <div className="founder-photo founder-photo-2">
-                <span className="founder-initials">CG</span>
+                <img src={charles} alt="Charlse Ginger-Eke" className="founder-photo-img" width={800} height={800} />
               </div>
               <div className="founder-info">
                 <span className="founder-name">Charlse Ginger-Eke</span>
@@ -97,24 +140,122 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ── GOFUNDME CTA ── */}
-      <section className="gofundme-section">
-        <div className="gf-corner-tl" />
-        <div className="gf-corner-br" />
-        <div className="gf-inner">
-          <div className="gf-eyebrow">Support the mission</div>
-          <div className="gf-headline">
-            Back us.<br /><span className="blk">Back them.</span>
+      {/* ── FEEDBACK ── */}
+      <section className="feedback-section">
+        <div className="feedback-inner">
+          <div className="feedback-eyebrow">We're listening</div>
+          <div className="feedback-headline">
+            Help us<br /><span className="blk">get better.</span>
           </div>
-          <p className="gf-body">
-            Every contribution goes directly into building the platform — the strategy library, the AI engine, the simulator — and keeping it free and accessible for every African trader who deserves better.
+          <p className="feedback-body">
+            Got a suggestion, spotted a bug, or just want to tell us how it's going? We read everything.
           </p>
-          <a href="https://gofund.me/" target="_blank" rel="noreferrer" className="btn-gofundme">
-            Support Us on GoFundMe →
-          </a>
-          <p className="gf-fine">100% goes toward product development and accessibility.</p>
+          <button className="btn-feedback" onClick={openModal}>
+            Share Your Feedback →
+          </button>
         </div>
       </section>
+
+      {/* ── FEEDBACK MODAL ── */}
+      {feedbackOpen && (
+        <div className="fb-overlay" onClick={e => { if (e.target === e.currentTarget) closeModal(); }}>
+          <div className="fb-modal">
+
+            {!isSuccess ? (
+              <>
+                {/* Form screen */}
+                <div className="fb-modal-top">
+                  <button className="fb-modal-close" onClick={closeModal}>✕</button>
+                  <div className="fb-modal-eyebrow">DigitalTradersLab</div>
+                  <div className="fb-modal-title">Talk to us.<br />We're listening.</div>
+                  <div className="fb-modal-sub">Every message gets read by Akuabata &amp; Charlse personally. No bots. No auto-replies.</div>
+                </div>
+
+                <div className="fb-modal-body">
+                  <div className={`fb-field${errors.name ? ' fb-field--error' : ''}`}>
+                    <label>Your Name <span className="fb-req">*</span></label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      placeholder="What should we call you?"
+                    />
+                  </div>
+
+                  <div className={`fb-field${errors.email ? ' fb-field--error' : ''}`}>
+                    <label>Email Address <span className="fb-req">*</span></label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      placeholder="we'll reply here"
+                    />
+                  </div>
+
+                  <div className="fb-rating-label">How would you rate your experience so far?</div>
+                  <div className="fb-rating-row">
+                    {RATING_EMOJIS.map((emoji, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        className={`fb-rating-btn${rating === i + 1 ? ' active' : ''}`}
+                        onClick={() => setRating(i + 1)}
+                      >
+                        {emoji}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className={`fb-field${errors.message ? ' fb-field--error' : ''}`}>
+                    <label>Your Message <span className="fb-req">*</span></label>
+                    <textarea
+                      value={message}
+                      onChange={e => setMessage(e.target.value.slice(0, 600))}
+                      placeholder="Tell us anything — what's working, what's not, what you'd love to see. Be honest. We can take it."
+                    />
+                    <div className="fb-char-count">
+                      <span className={message.length > 500 ? 'warn' : ''}>{message.length} / 600</span>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    className={`fb-submit-btn${isSubmitting ? ' loading' : ''}`}
+                    onClick={handleSubmit}
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? <span className="fb-spinner" /> : 'Send to Akuabata & Charlse ⚡'}
+                  </button>
+
+                  <div className="fb-privacy">
+                    Your email is only used to reply to you. We don't share it.<br />
+                    Built with love for African traders. 🌍
+                  </div>
+                </div>
+              </>
+            ) : (
+              <>
+                {/* Success screen */}
+                <div className="fb-success-top">
+                  <span className="fb-success-emoji">🎉</span>
+                  <div className="fb-success-title">Message Received!</div>
+                  <div className="fb-success-sub">We read every single one.</div>
+                </div>
+                <div className="fb-success-body">
+                  <div className="fb-success-message">
+                    <strong>Thank you for taking the time.</strong><br /><br />
+                    Your feedback goes directly to us — and it genuinely shapes what we build next. If you left your email, we'll be in touch. This is exactly the kind of support that keeps us going.<br /><br />
+                    You found us early. That means everything. ⚡
+                  </div>
+                  <div className="fb-success-from">— Akuabata &amp; Charlse</div>
+                  <button type="button" className="fb-close-success" onClick={closeModal}>Close &amp; Go Back</button>
+                </div>
+              </>
+            )}
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

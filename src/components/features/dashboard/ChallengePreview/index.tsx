@@ -51,6 +51,7 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
   const [isComplete, setIsComplete] = useState(false);
   const [score, setScore] = useState(0);
   const [explanation, setExplanation] = useState<string | null>(null);
+  const [showExitWarning, setShowExitWarning] = useState(false);
 
   const resetState = () => {
     setIsComplete(false);
@@ -61,6 +62,7 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
     setIsRevealed(false);
     setIsCorrect(null);
     setExplanation(null);
+    setShowExitWarning(false);
   };
 
   const isLoading = isFireMode ? fireLoading : challengeLoading;
@@ -233,11 +235,28 @@ export default function ChallengePreview({ challengeId }: ChallengePreviewProps)
 
   return (
     <div className="cp-screen cp-screen-question">
+      {showExitWarning && (
+        <div className="exit-modal-overlay">
+          <div className="exit-modal">
+            <div className="exit-modal-title">Leave challenge?</div>
+            <div className="exit-modal-body">Your progress on this challenge will be lost.</div>
+            <div className="exit-modal-actions">
+              <button className="btn-exit-confirm" onClick={() => navigate({ to: '/dashboard' })}>
+                Leave
+              </button>
+              <button className="btn-exit-cancel" onClick={() => setShowExitWarning(false)}>
+                Keep going
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="q-progress-bar-wrap">
         <div className="q-progress-bar" style={{ width: `${pct}%` }} />
       </div>
       <div className="q-content">
         <div className="q-header">
+          <button className="q-back-btn" onClick={() => setShowExitWarning(true)}>← Back</button>
           <div className="q-counter">
             {String(currentQIndex + 1).padStart(2, '0')} <span>/ {questions.length}</span>
           </div>

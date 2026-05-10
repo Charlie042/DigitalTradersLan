@@ -138,7 +138,7 @@ router.get('/challenges/:slug', async (req: Request, res: Response) => {
     return;
   }
 
-  const chList = await db.select().from(challenges).where(eq(challenges.slug, slug as unknown as string)).limit(1);
+  const chList = await db.select().from(challenges).where(eq(challenges.id, Number(slug))).limit(1);
   if (chList.length === 0) {
     res.status(404).json({ error: 'Challenge not found.' });
     return;

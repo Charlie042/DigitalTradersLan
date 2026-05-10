@@ -86,7 +86,7 @@ export default function DashboardHome() {
           <Link
             key={ch.id}
             to="/dashboard/challenge/$challengeId"
-            params={{ challengeId: ch.id }}
+            params={{ challengeId: ch.dbId.toString() }}
             className="challenge-row"
           >
             <div className="ch-icon" style={{ background: difficultyIconBg[ch.difficulty] ?? '#E8EEFF' }}>
