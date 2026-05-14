@@ -1,106 +1,6 @@
-/** Catalog content for the app UI. DB seed copy: `server/data/catalogSeed.ts` — keep them in sync when you add topics or questions. */
-export interface Question {
-  id: string;
-  type: 'theory' | 'chart';
-  text: string;
-  imageUrl?: string;
-  options: string[];
-  correctAnswerIndex: number;
-  explanation: string;
-}
+import type { SeedSubTopic } from '../../types.js';
 
-export interface Challenge {
-  id: string;
-  title: string;
-  description: string;
-  difficulty: 'Easy' | 'Medium' | 'Hard';
-  reward: number; // Coins/Points earned
-  questions: Question[];
-}
-
-export interface SubTopic {
-  id: string;
-  title: string;
-  challenges: Challenge[];
-}
-
-export interface Topic {
-  id: string;
-  title: string;
-  icon: string;
-  subTopics: SubTopic[];
-}
-
-export interface UserStats {
-  streak: number;
-  totalCoins: number;
-  challengesCompleted: number;
-}
-
-// ---- MOCK DATA ----
-
-export const mockUserStats: UserStats = {
-  streak: 3,
-  totalCoins: 450,
-  challengesCompleted: 12,
-};
-
-export const mockTopics: Topic[] = [
-  {
-    id: 'candlesticks',
-    title: 'Candlestick Anatomy',
-    icon: '🕯️',
-    subTopics: [
-      {
-        id: 'bullish-engulfing',
-        title: 'Bullish Engulfing',
-        challenges: [
-          {
-            id: 'chal-bull-easy-1',
-            title: 'Identify the Engulfing',
-            description: 'Learn to spot the primary characteristics of a standard bullish engulfing pattern.',
-            difficulty: 'Easy',
-            reward: 50,
-            questions: [
-              {
-                id: 'q1',
-                type: 'theory',
-                text: 'What defines a Bullish Engulfing pattern?',
-                options: [
-                  'A large green candle completely covering the body of the previous red candle.',
-                  'A red candle followed by a doji.',
-                  'A green candle that is smaller than the previous red candle.',
-                  'Two green candles of the same size.'
-                ],
-                correctAnswerIndex: 0,
-                explanation: 'A Bullish Engulfing pattern occurs when a large green candle completely engulfs the body of the preceding red candle, indicating a shift from selling pressure to immense buying pressure.'
-              },
-              {
-                id: 'q2',
-                type: 'theory',
-                text: 'Where is a Bullish Engulfing pattern most effective?',
-                options: [
-                  'In the middle of a sideways consolidation.',
-                  'At the bottom of a prolonged downtrend or key support level.',
-                  'At the very top of a massive uptrend.',
-                  'After a high-impact news event.'
-                ],
-                correctAnswerIndex: 1,
-                explanation: 'Bullish Engulfing patterns are reversal signals. They hold the highest probability when they form at the bottom of a downtrend or off a major support level, trapping late sellers.'
-              }
-            ]
-          },
-          {
-            id: 'chal-bull-med-1',
-            title: 'Context over Print',
-            description: 'Apply candlestick theory into structural market conditions.',
-            difficulty: 'Medium',
-            reward: 100,
-            questions: [] // Intentionally blank for MVP structural demonstration
-          }
-        ]
-      },
-      {
+export const bearishEngulfingSubTopic: SeedSubTopic = {
         id: 'bearish-engulfing',
         title: 'Bearish Engulfing',
         challenges: [
@@ -124,7 +24,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 1,
                 explanation:
-                  "A bearish engulfing happens when a strong bearish candle fully covers (engulfs) the previous bullish candle's body, signalling a shift to selling pressure.",
+                  'A bearish engulfing happens when a strong bearish candle fully covers (engulfs) the previous bullish candle\'s body, signalling a shift to selling pressure.',
               },
               {
                 id: 'q2',
@@ -138,11 +38,11 @@ export const mockTopics: Topic[] = [
               {
                 id: 'q3',
                 type: 'theory',
-                text: "What must the second candle do?",
+                text: 'What must the second candle do?',
                 options: [
                   'Be smaller than the first',
                   'Close above the first candle',
-                  "Completely cover the first candle's body",
+                  'Completely cover the first candle\'s body',
                   'Have a long wick only',
                 ],
                 correctAnswerIndex: 2,
@@ -206,7 +106,7 @@ export const mockTopics: Topic[] = [
                 text: 'In a Bearish Engulfing pattern, what should happen to the close of the second candle?',
                 options: [
                   'Close above the first candle',
-                  "Close below the first candle's open",
+                  'Close below the first candle\'s open',
                   'Close at the same level',
                   'Close with a long wick only',
                 ],
@@ -217,11 +117,11 @@ export const mockTopics: Topic[] = [
               {
                 id: 'q9',
                 type: 'theory',
-                text: "After an uptrend: Candle 1 is a small green candle. Candle 2 is a large red candle that opens above Candle 1's close and closes below Candle 1's open. What is this?",
+                text: 'After an uptrend: Candle 1 is a small green candle. Candle 2 is a large red candle that opens above Candle 1\'s close and closes below Candle 1\'s open. What is this?',
                 options: ['Bearish engulfing', 'Bullish engulfing', 'Doji', 'Inside bar'],
                 correctAnswerIndex: 0,
                 explanation:
-                  "The red candle fully engulfs the green candle's body, showing strong seller takeover — bearish engulfing.",
+                  'The red candle fully engulfs the green candle\'s body, showing strong seller takeover — bearish engulfing.',
               },
               {
                 id: 'q10',
@@ -235,16 +135,16 @@ export const mockTopics: Topic[] = [
               {
                 id: 'q11',
                 type: 'theory',
-                text: "After an uptrend: a green candle is followed by a red candle that closes below the green candle's open but opens inside it. Is this a valid bearish engulfing?",
+                text: 'After an uptrend: a green candle is followed by a red candle that closes below the green candle\'s open but opens inside it. Is this a valid bearish engulfing?',
                 options: ['Yes', 'No', 'Only in forex', 'Only on higher timeframe'],
                 correctAnswerIndex: 0,
                 explanation:
-                  "What matters is the body engulfing. Even if it opens inside, as long as it closes below the previous open, it's valid.",
+                  'What matters is the body engulfing. Even if it opens inside, as long as it closes below the previous open, it\'s valid.',
               },
               {
                 id: 'q12',
                 type: 'theory',
-                text: "A green candle is followed by a red candle with a long lower wick but a small body that does NOT cover the green candle's body. What is the correct interpretation?",
+                text: 'A green candle is followed by a red candle with a long lower wick but a small body that does NOT cover the green candle\'s body. What is the correct interpretation?',
                 options: [
                   'Strong bearish engulfing',
                   'Weak bearish engulfing',
@@ -253,7 +153,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 2,
                 explanation:
-                  "The body does not engulf, so it's not a bearish engulfing — wicks do not count.",
+                  'The body does not engulf, so it\'s not a bearish engulfing — wicks do not count.',
               },
               {
                 id: 'q13',
@@ -346,7 +246,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 2,
                 explanation:
-                  "Candle sizes don't have to be equal — the second just needs to engulf the first body.",
+                  'Candle sizes don\'t have to be equal — the second just needs to engulf the first body.',
               },
               {
                 id: 'q5',
@@ -419,7 +319,7 @@ export const mockTopics: Topic[] = [
               {
                 id: 'q10',
                 type: 'theory',
-                text: "A bearish engulfing forms in the middle of a choppy, ranging market. What's the best interpretation?",
+                text: 'A bearish engulfing forms in the middle of a choppy, ranging market. What\'s the best interpretation?',
                 options: [
                   'Strong sell',
                   'Fake signal likely',
@@ -738,7 +638,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 1,
                 explanation:
-                  "Without breaking structure, it's likely just a short-term reaction, not a full reversal.",
+                  'Without breaking structure, it\'s likely just a short-term reaction, not a full reversal.',
               },
               {
                 id: 'q5',
@@ -752,7 +652,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 2,
                 explanation:
-                  "Counter-trend trades need extra confirmation — don't rush in.",
+                  'Counter-trend trades need extra confirmation — don\'t rush in.',
               },
               {
                 id: 'q6',
@@ -784,7 +684,7 @@ export const mockTopics: Topic[] = [
               {
                 id: 'q8',
                 type: 'theory',
-                text: "A bearish engulfing forms, but it does NOT engulf the previous candle's body fully — only the wick. What is this?",
+                text: 'A bearish engulfing forms, but it does NOT engulf the previous candle\'s body fully — only the wick. What is this?',
                 options: [
                   'Valid engulfing',
                   'Strong reversal',
@@ -807,7 +707,7 @@ export const mockTopics: Topic[] = [
               {
                 id: 'q10',
                 type: 'theory',
-                text: "After a bearish engulfing, price returns to retest the engulfing candle's midpoint. What is this commonly used for?",
+                text: 'After a bearish engulfing, price returns to retest the engulfing candle\'s midpoint. What is this commonly used for?',
                 options: [
                   'Exit point',
                   'Entry refinement',
@@ -854,7 +754,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 2,
                 explanation:
-                  "If price doesn't reclaim resistance to the downside, buyers are still in control → likely continuation up.",
+                  'If price doesn\'t reclaim resistance to the downside, buyers are still in control → likely continuation up.',
               },
               {
                 id: 'q3',
@@ -952,7 +852,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 1,
                 explanation:
-                  "Without a lower low, there's no real confirmation of trend change.",
+                  'Without a lower low, there\'s no real confirmation of trend change.',
               },
               {
                 id: 'q10',
@@ -1072,7 +972,8 @@ export const mockTopics: Topic[] = [
                   'Consolidation',
                 ],
                 correctAnswerIndex: 2,
-                explanation: 'Quick drop = bait, reversal = trap for sellers.',
+                explanation:
+                  'Quick drop = bait, reversal = trap for sellers.',
               },
               {
                 id: 'q8',
@@ -1185,7 +1086,7 @@ export const mockTopics: Topic[] = [
               {
                 id: 'q5',
                 type: 'theory',
-                text: "A bearish engulfing forms, then price retraces deeply into the candle and almost breaks its high. What should you think?",
+                text: 'A bearish engulfing forms, then price retraces deeply into the candle and almost breaks its high. What should you think?',
                 options: [
                   'Strong sellers',
                   'Weak structure / risk of failure',
@@ -1193,7 +1094,8 @@ export const mockTopics: Topic[] = [
                   'Trend confirmed',
                 ],
                 correctAnswerIndex: 1,
-                explanation: 'Deep retrace = sellers not in full control.',
+                explanation:
+                  'Deep retrace = sellers not in full control.',
               },
               {
                 id: 'q6',
@@ -1206,7 +1108,8 @@ export const mockTopics: Topic[] = [
                   'Perfect continuation',
                 ],
                 correctAnswerIndex: 2,
-                explanation: 'Upward MA = bullish context → higher risk trade.',
+                explanation:
+                  'Upward MA = bullish context → higher risk trade.',
               },
               {
                 id: 'q7',
@@ -1220,7 +1123,7 @@ export const mockTopics: Topic[] = [
                 ],
                 correctAnswerIndex: 1,
                 explanation:
-                  "Sellers couldn't match bullish strength → weak reaction.",
+                  'Sellers couldn\'t match bullish strength → weak reaction.',
               },
               {
                 id: 'q8',
@@ -1233,7 +1136,8 @@ export const mockTopics: Topic[] = [
                   'Trend continuation',
                 ],
                 correctAnswerIndex: 2,
-                explanation: 'Break → fail = liquidity trap below lows.',
+                explanation:
+                  'Break → fail = liquidity trap below lows.',
               },
               {
                 id: 'q9',
@@ -1265,31 +1169,5 @@ export const mockTopics: Topic[] = [
               },
             ],
           },
-        ]
-      },
-      {
-        id: 'rejection-wicks',
-        title: 'Rejection Wicks (Pinbars)',
-        challenges: []
-      }
-    ]
-  },
-  {
-    id: 'market-structure',
-    title: 'Market Structure',
-    icon: '📈',
-    subTopics: [
-      {
-        id: 'higher-highs',
-        title: 'Identifying Trends',
-        challenges: []
-      }
-    ]
-  },
-  {
-    id: 'liquidity',
-    title: 'Liquidity Pools',
-    icon: '💧',
-    subTopics: []
-  }
-];
+        ],
+};

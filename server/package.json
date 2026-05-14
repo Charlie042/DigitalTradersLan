@@ -11,8 +11,7 @@
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
-    "db:seed": "tsx scripts/seedCatalog.ts --dev",
-    "db:seed:dev": "tsx scripts/seedCatalog.ts --dev",
+    "db:seed": "tsx scripts/seedCatalog.ts --prod",
     "db:seed:prod": "tsx scripts/seedCatalog.ts --prod"
   },
   "dependencies": {

@@ -1,12 +1,14 @@
 /**
- * Catalog seed — two modes:
+ * Catalog seed — safe production mode only:
  *
- *   npm run db:seed:dev   → Wipes catalog + related learner rows, then inserts from catalogSeed.
- *   npm run db:seed:prod  → Upserts catalog only (topics → questions). Never deletes submissions
- *                           / progress / completions. MCQ options are replaced only for questions
- *                           that have zero submissions (so past attempts keep valid option ids).
+ *   npm run db:seed       → Upserts catalog only (topics → questions).
+ *   npm run db:seed:prod  → Same as above.
  *
- * From repo root: `cd server && npm run db:seed:dev` (or `:prod`).
+ * This never deletes submissions / progress / completions. MCQ options are
+ * replaced only for questions that have zero submissions, so past attempts keep
+ * valid option ids.
+ *
+ * From repo root: `cd server && npm run db:seed`.
  */
 import 'dotenv/config';
 import { and, count, eq } from 'drizzle-orm';
@@ -19,49 +21,28 @@ import {
   challengeQuestions,
   mcqOptions,
   submissions,
-  userProgress,
-  userChallengeCompletions,
-  questionAssets,
-  dataAnalysisAnswers,
 } from '../db/schema.js';
 import { catalogTopics, type SeedQuestion } from '../data/catalogSeed.js';
 
-type Mode = 'dev' | 'prod';
-
-function parseMode(): Mode {
+function ensureProdMode() {
   const argv = process.argv.slice(2);
   const hasDev = argv.includes('--dev');
   const hasProd = argv.includes('--prod');
-  if (hasDev && hasProd) {
-    console.error('Use only one of --dev or --prod.');
+  if (hasDev) {
+    console.error('The destructive --dev seed mode has been removed. Use npm run db:seed instead.');
     process.exit(1);
   }
-  if (hasProd) return 'prod';
-  if (hasDev) return 'dev';
-  console.error('Usage: tsx scripts/seedCatalog.ts --dev | --prod');
-  console.error('  --dev  Reset catalog + submissions/progress/completions for seeded content, then insert.');
-  console.error('  --prod Upsert catalog only; safe for production (does not wipe learner data).');
-  process.exit(1);
+  if (!hasProd) {
+    console.error('Usage: tsx scripts/seedCatalog.ts --prod');
+    console.error('  --prod Upsert catalog only; safe for production (does not wipe learner data).');
+    process.exit(1);
+  }
 }
 
 function mapDifficulty(d: 'Easy' | 'Medium' | 'Hard'): 'easy' | 'medium' | 'hard' {
   if (d === 'Easy') return 'easy';
   if (d === 'Hard') return 'hard';
   return 'medium';
-}
-
-async function clearCatalogAndLearnerRows() {
-  await db.delete(userChallengeCompletions);
-  await db.delete(submissions);
-  await db.delete(userProgress);
-  await db.delete(challengeQuestions);
-  await db.delete(mcqOptions);
-  await db.delete(questionAssets);
-  await db.delete(dataAnalysisAnswers);
-  await db.delete(questions);
-  await db.delete(challenges);
-  await db.delete(subtopics);
-  await db.delete(topics);
 }
 
 async function submissionCountForQuestion(questionId: number): Promise<number> {
@@ -84,86 +65,6 @@ async function replaceMcqOptions(questionId: number, q: SeedQuestion) {
   }
 }
 
-async function seedDev() {
-  await clearCatalogAndLearnerRows();
-
-  let topicOrder = 0;
-  for (const t of catalogTopics) {
-    const [topicRow] = await db
-      .insert(topics)
-      .values({
-        title: t.title,
-        slug: t.id,
-        icon: t.icon,
-        displayOrder: topicOrder++,
-      })
-      .returning({ id: topics.id });
-
-    let subOrder = 0;
-    for (const s of t.subTopics) {
-      const [subRow] = await db
-        .insert(subtopics)
-        .values({
-          topicId: topicRow.id,
-          title: s.title,
-          slug: s.id,
-          displayOrder: subOrder++,
-        })
-        .returning({ id: subtopics.id });
-
-      let chOrder = 0;
-      for (const c of s.challenges) {
-        const [chRow] = await db
-          .insert(challenges)
-          .values({
-            subtopicId: subRow.id,
-            title: c.title,
-            slug: c.id,
-            description: c.description,
-            difficulty: mapDifficulty(c.difficulty),
-            rewardXp: c.reward,
-            displayOrder: chOrder++,
-          })
-          .returning({ id: challenges.id });
-
-        let qOrder = 0;
-        for (const q of c.questions) {
-          const qSlug = `${c.id}--${q.id}`;
-          const [qRow] = await db
-            .insert(questions)
-            .values({
-              title: q.text.slice(0, 200),
-              slug: qSlug,
-              description: q.text,
-              explanation: q.explanation,
-              type: 'mcq',
-              difficulty: mapDifficulty(c.difficulty),
-              status: 'published',
-              topicId: topicRow.id,
-              subtopicId: subRow.id,
-              metadata: {
-                legacyQuestionId: q.id,
-                displayType: q.type,
-                imageUrl: q.imageUrl ?? null,
-              },
-            })
-            .returning({ id: questions.id });
-
-          await db.insert(challengeQuestions).values({
-            challengeId: chRow.id,
-            questionId: qRow.id,
-            displayOrder: qOrder++,
-          });
-
-          await replaceMcqOptions(qRow.id, q);
-        }
-      }
-    }
-  }
-
-  const topicRows = await db.select({ id: topics.id }).from(topics);
-  console.log(`[db:seed:dev] ✓ Reset + seeded ${topicRows.length} topic(s).`);
-}
 
 async function seedProd() {
   let topicOrder = 0;
@@ -328,12 +229,8 @@ async function seedProd() {
 }
 
 async function main() {
-  const mode = parseMode();
-  if (mode === 'dev') {
-    await seedDev();
-  } else {
-    await seedProd();
-  }
+  ensureProdMode();
+  await seedProd();
 }
 
 main().catch((e) => {
