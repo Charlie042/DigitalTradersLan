@@ -54,14 +54,27 @@ function frontendOrigin(): string | null {
 }
 
 /**
- * SPA on another host than the API (typical: Vercel + Railway). Session cookies must use
+ * SPA on another host than the API (typical: site on Vercel + API on Railway). Session cookies must use
  * SameSite=None; Secure or browsers won't attach them to cross-origin fetch(..., { credentials }).
+ *
+ * If GOOGLE_REDIRECT_URI is missing from env, apiOrigin() is null — we still treat "frontend not on
+ * railway.app" as cross-site when deployed to Railway, so cookies work for credentialed fetches.
  */
 function isCrossOriginAuth(): boolean {
   const fe = frontendOrigin();
   const api = apiOrigin();
-  if (!fe || !api) return false;
-  return fe !== api;
+  if (fe && api) {
+    return fe !== api;
+  }
+  if (isProdLike && fe && process.env.RAILWAY_ENVIRONMENT) {
+    try {
+      const host = new URL(fe).hostname;
+      return !host.endsWith('railway.app');
+    } catch {
+      return false;
+    }
+  }
+  return false;
 }
 
 function sessionCookieOptions() {
@@ -239,8 +252,18 @@ router.get('/google/callback', async (req: Request, res: Response) => {
     });
     res.cookie(COOKIE_NAME, sessionToken, sessionCookieOptions());
     const nextUrl = postLoginRedirectUrl();
-    console.log('[auth/google/callback] redirect →', nextUrl);
-    res.redirect(302, nextUrl);
+    // Hash is never sent as Referer to third parties; SPA reads it and uses Authorization Bearer.
+    // Needed when browsers block third-party cookies between your domain and the API (Railway).
+    let redirectTo: string;
+    try {
+      const u = new URL(nextUrl);
+      u.hash = `session=${encodeURIComponent(sessionToken)}`;
+      redirectTo = u.toString();
+    } catch {
+      redirectTo = `${nextUrl}#session=${encodeURIComponent(sessionToken)}`;
+    }
+    console.log('[auth/google/callback] redirect →', nextUrl, '(+ session hash)');
+    res.redirect(302, redirectTo);
   } catch (e) {
     console.error('[auth/google/callback]', e);
     fail('server_error');

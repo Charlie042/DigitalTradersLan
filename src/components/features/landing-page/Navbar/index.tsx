@@ -45,7 +45,6 @@ export default function Navbar({ onOpenSignIn, user }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const closeMenu = () => setMenuOpen(false);
-  const displayName = user?.name?.trim() || user?.email || '';
 
   return (
     <header className="landing-nav">
@@ -61,7 +60,7 @@ export default function Navbar({ onOpenSignIn, user }: NavbarProps) {
                 {user.picture && (
                   <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
                 )}
-                <span className="nav-auth__name" title={user.email}>{displayName}</span>
+                <span className="nav-auth__name" title={user.email}>{user.name}</span>
                 <Link to="/dashboard" className="nav-dashboard" onClick={closeMenu}>
                   Dashboard
                 </Link>
@@ -105,7 +104,7 @@ export default function Navbar({ onOpenSignIn, user }: NavbarProps) {
                   {user.picture && (
                     <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
                   )}
-                  <span className="nav-auth__name">{displayName}</span>
+                  <span className="nav-auth__name">{user.name}</span>
                   <Link to="/dashboard" className="nav-dashboard" onClick={closeMenu}>
                     Dashboard
                   </Link>

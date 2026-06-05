@@ -1,8 +1,6 @@
 import AuthModal from '../../ui/AuthModal';
 import { useState, useEffect } from 'react';
 import Navbar from './Navbar';
-import { getApiBase } from '../../../lib/api';
-import { useAuthUser } from '../../../hooks/useAuthUser';
 import Hero from './Hero';
 import Ticker from './Ticker';
 import Problem from './Problem';
@@ -13,6 +11,8 @@ import Stats from './Stats';
 import Differentiators from './Differentiators';
 import CTA from './CTA';
 import Footer from './Footer';
+import { useAuthUser } from '@/hooks/useAuthUser';
+import { getApiBase } from '@/lib/api';
 
 export default function LandingPage() {
   const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
