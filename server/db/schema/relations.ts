@@ -1,15 +1,15 @@
 import { relations } from 'drizzle-orm';
-import { users } from './users';
-import { topics, subtopics, challenges } from './topics';
+import { users } from './users.js';
+import { topics, subtopics, challenges } from './topics.js';
 import {
   questions,
   challengeQuestions,
   mcqOptions,
   questionAssets,
   dataAnalysisAnswers,
-} from './questions';
-import { submissions, userProgress } from './progress';
-import { userStats, userChallengeCompletions } from './rewards';
+} from './questions.js';
+import { submissions, userProgress } from './progress.js';
+import { userStats, userChallengeCompletions } from './rewards.js';
 
 export const usersRelations = relations(users, ({ many, one }) => ({
   submissions: many(submissions),
