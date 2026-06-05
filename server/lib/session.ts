@@ -39,10 +39,24 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
 
 export { COOKIE_NAME };
 
-/** Numeric user id from signed session cookie (matches `users.id` serial). */
+/** Session JWT from the cookie, falling back to an `Authorization: Bearer <jwt>` header. */
+function getSessionTokenFromRequest(req: Request): string | null {
+  const cookieToken = req.cookies?.[COOKIE_NAME];
+  if (typeof cookieToken === 'string' && cookieToken) return cookieToken;
+
+  const header = req.headers.authorization;
+  if (typeof header === 'string' && header.startsWith('Bearer ')) {
+    const bearer = header.slice('Bearer '.length).trim();
+    if (bearer) return bearer;
+  }
+
+  return null;
+}
+
+/** Numeric user id from the signed session (cookie or Bearer header). Matches `users.id` serial. */
 export async function getSessionUserIdFromRequest(req: Request): Promise<number | null> {
-  const token = req.cookies?.[COOKIE_NAME];
-  if (!token || typeof token !== 'string') return null;
+  const token = getSessionTokenFromRequest(req);
+  if (!token) return null;
   const payload = await verifySessionToken(token);
   if (!payload) return null;
   const id = Number.parseInt(payload.sub, 10);
