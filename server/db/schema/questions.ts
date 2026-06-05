@@ -11,9 +11,9 @@ import {
   index,
   uniqueIndex,
 } from 'drizzle-orm/pg-core';
-import { difficultyEnum, questionTypeEnum, questionStatusEnum, assetTypeEnum } from './enums';
-import { users } from './users';
-import { topics, subtopics, challenges } from './topics';
+import { difficultyEnum, questionTypeEnum, questionStatusEnum, assetTypeEnum } from './enums.js';
+import { users } from './users.js';
+import { topics, subtopics, challenges } from './topics.js';
 
 export const questions = pgTable('questions', {
   id:               serial('id').primaryKey(),

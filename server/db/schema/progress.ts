@@ -1,7 +1,7 @@
 import { pgTable, serial, integer, timestamp, jsonb, primaryKey, index } from 'drizzle-orm/pg-core';
-import { submissionStatusEnum, progressStatusEnum } from './enums';
-import { users } from './users';
-import { questions } from './questions';
+import { submissionStatusEnum, progressStatusEnum } from './enums.js';
+import { users } from './users.js';
+import { questions } from './questions.js';
 
 export const submissions = pgTable('submissions', {
   id:              serial('id').primaryKey(),

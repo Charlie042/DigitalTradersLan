@@ -1,6 +1,6 @@
 import { pgTable, integer, timestamp, jsonb, primaryKey, index } from 'drizzle-orm/pg-core';
-import { users } from './users';
-import { challenges } from './topics';
+import { users } from './users.js';
+import { challenges } from './topics.js';
 
 export const userStats = pgTable('user_stats', {
   userId:               integer('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),

@@ -1,5 +1,5 @@
 import { pgTable, serial, text, integer, timestamp, index, uniqueIndex } from 'drizzle-orm/pg-core';
-import { difficultyEnum } from './enums';
+import { difficultyEnum } from './enums.js';
 
 export const topics = pgTable('topics', {
   id:           integer('id').primaryKey().generatedAlwaysAsIdentity(),

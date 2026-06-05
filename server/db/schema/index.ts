@@ -1,10 +1,10 @@
 /**
  * Drizzle schema split by domain. Import from `../schema.js` (barrel) for a single entry point.
  */
-export * from './enums';
-export * from './users';
-export * from './topics';
-export * from './questions';
-export * from './progress';
-export * from './rewards';
-export * from './relations';
+export * from './enums.js';
+export * from './users.js';
+export * from './topics.js';
+export * from './questions.js';
+export * from './progress.js';
+export * from './rewards.js';
+export * from './relations.js';
