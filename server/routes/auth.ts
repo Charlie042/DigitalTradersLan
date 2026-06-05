@@ -3,6 +3,7 @@ import crypto from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { users } from '../db/schema.js';
+import { asyncHandler } from '../lib/http.js';
 import { COOKIE_NAME, getSessionUserIdFromRequest, signSessionToken } from '../lib/session.js';
 import { getOAuth2Client, GOOGLE_SCOPES } from '../lib/googleOAuth.js';
 import { sendWelcomeEmail } from '../email/welcomeEmail.js';
@@ -246,7 +247,7 @@ router.get('/google/callback', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/me', async (req: Request, res: Response) => {
+router.get('/me', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ user: null });
@@ -270,9 +271,9 @@ router.get('/me', async (req: Request, res: Response) => {
       hasGoogleRefreshToken: Boolean(u.googleRefreshToken),
     },
   });
-});
+}));
 
-router.post('/google/refresh', async (req: Request, res: Response) => {
+router.post('/google/refresh', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Not signed in.' });
@@ -311,7 +312,7 @@ router.post('/google/refresh', async (req: Request, res: Response) => {
     console.error('[auth/google/refresh]', e);
     res.status(500).json({ error: 'Failed to refresh Google access token.' });
   }
-});
+}));
 
 router.post('/logout', (_req: Request, res: Response) => {
   res.clearCookie(COOKIE_NAME, clearCookieOptions());

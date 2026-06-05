@@ -2,6 +2,7 @@ import { Router, Request, Response } from 'express';
 import { db } from '../db/index.js';
 import { waitlist } from '../db/schema.js';
 import { sendWaitlistConfirmationEmail } from '../email/waitlistConfirmation.js';
+import { isDbConnectionError } from '../lib/http.js';
 
 const router = Router();
 
@@ -46,6 +47,11 @@ router.post('/', async (req: Request, res: Response) => {
     // Postgres unique violation = 23505
     if (err instanceof Error && 'code' in err && (err as NodeJS.ErrnoException).code === '23505') {
       res.status(409).json({ error: 'This email is already on the waitlist.' });
+      return;
+    }
+    if (isDbConnectionError(err)) {
+      console.error('Waitlist database connection error:', err);
+      res.status(503).json({ error: 'Database temporarily unavailable. Please try again in a moment.' });
       return;
     }
     console.error('Waitlist insert error:', err);

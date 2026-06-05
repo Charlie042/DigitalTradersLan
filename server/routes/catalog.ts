@@ -13,12 +13,13 @@ import {
   userStats,
   userChallengeCompletions,
 } from '../db/schema.js';
+import { asyncHandler } from '../lib/http.js';
 import { getSessionUserIdFromRequest } from '../lib/session.js';
 
 const router = Router();
 
 /** Public tree: topics → subtopics → challenges (no questions). */
-router.get('/topics', async (_req: Request, res: Response) => {
+router.get('/topics', asyncHandler(async (_req: Request, res: Response) => {
   const topicRows = await db.select().from(topics).orderBy(asc(topics.displayOrder), asc(topics.id));
   const subRows = await db.select().from(subtopics).orderBy(asc(subtopics.displayOrder), asc(subtopics.id));
   const chRows = await db.select().from(challenges).orderBy(asc(challenges.displayOrder), asc(challenges.id));
@@ -57,7 +58,7 @@ router.get('/topics', async (_req: Request, res: Response) => {
   }));
 
   res.json({ topics: payload });
-});
+}));
 
 /** Play payload for one challenge: ordered questions + MCQ options (no `isCorrect`). */
 function paramSlug(req: Request): string | null {
@@ -67,7 +68,7 @@ function paramSlug(req: Request): string | null {
   return null;
 }
 
-router.get('/topics/:slug', async (req: Request, res: Response) => {
+router.get('/topics/:slug', asyncHandler(async (req: Request, res: Response) => {
   const slug = req.params.slug;
   if (!slug) {
     res.status(400).json({ error: 'No topic id provided.' });
@@ -128,10 +129,10 @@ router.get('/topics/:slug', async (req: Request, res: Response) => {
   };
 
   res.status(200).json( {topic: topicData});
-});
+}));
 
 
-router.get('/challenges/:slug', async (req: Request, res: Response) => {
+router.get('/challenges/:slug', asyncHandler(async (req: Request, res: Response) => {
   const slug = paramSlug(req);
   if (!slug) {
     res.status(400).json({ error: 'Missing challenge slug.' });
@@ -212,10 +213,10 @@ router.get('/challenges/:slug', async (req: Request, res: Response) => {
       }),
     },
   });
-});
+}));
 
 /** Record one MCQ attempt; expects `answer: { selectedOptionId: number }`. */
-router.post('/submissions', async (req: Request, res: Response) => {
+router.post('/submissions', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Sign in required.' });
@@ -322,10 +323,10 @@ router.post('/submissions', async (req: Request, res: Response) => {
     correct,
     explanation,
   });
-});
+}));
 
 /** Aggregate stats for the signed-in user. */
-router.get('/stats/me', async (req: Request, res: Response) => {
+router.get('/stats/me', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Sign in required.' });
@@ -358,10 +359,10 @@ router.get('/stats/me', async (req: Request, res: Response) => {
     totalXp: stats?.totalXp ?? 0,
     challengesCompleted: stats?.challengesCompleted ?? 0,
   });
-});
+}));
 
 /** Call when the user finishes a challenge in the UI (awards XP once per challenge per user by upsert). */
-router.post('/challenges/:slug/complete', async (req: Request, res: Response) => {
+router.post('/challenges/:slug/complete', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Sign in required.' });
@@ -443,10 +444,10 @@ router.post('/challenges/:slug/complete', async (req: Request, res: Response) =>
   }
 
   res.json({ ok: true, rewardXp: isFirstCompletion ? ch.rewardXp : 0, summary, firstCompletion: isFirstCompletion });
-});
+}));
 
 /** Random questions from across all challenges for Fire Mode (Quick Play). */
-router.get('/fire-mode', async (req: Request, res: Response) => {
+router.get('/fire-mode', asyncHandler(async (req: Request, res: Response) => {
   const limit = Math.min(Number(req.query.limit) || 10, 20);
 
   // Fetch more than needed so deduplication doesn't leave us short
@@ -528,10 +529,10 @@ router.get('/fire-mode', async (req: Request, res: Response) => {
       }),
     },
   });
-});
+}));
 
 /** Per-topic progress % for the signed-in user (solved questions / total questions). */
-router.get('/progress/topics', async (req: Request, res: Response) => {
+router.get('/progress/topics', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Sign in required.' });
@@ -573,10 +574,10 @@ router.get('/progress/topics', async (req: Request, res: Response) => {
   }
 
   res.json({ progress });
-});
+}));
 
 /** Recently-touched challenges for the signed-in user (Continue Where You Left Off). */
-router.get('/progress/recent', async (req: Request, res: Response) => {
+router.get('/progress/recent', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Sign in required.' });
@@ -659,6 +660,6 @@ router.get('/progress/recent', async (req: Request, res: Response) => {
     .filter(Boolean);
 
   res.json({ challenges: result });
-});
+}));
 
 export default router;
