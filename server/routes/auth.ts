@@ -273,14 +273,14 @@ router.get('/google/callback', async (req: Request, res: Response) => {
 router.get('/me', asyncHandler(async (req: Request, res: Response) => {
   const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
-    res.status(401).json({ user: null });
+    res.status(401).json({ user: "User not Avaliable" });
     return;
   }
 
   const rows = await db.select().from(users).where(eq(users.id, userId)).limit(1);
   if (rows.length === 0) {
     res.clearCookie(COOKIE_NAME, clearCookieOptions());
-    res.status(401).json({ user: null });
+    res.status(401).json({ user: "The user does not exit" });
     return;
   }
 
