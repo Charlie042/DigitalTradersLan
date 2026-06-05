@@ -1,0 +1,159 @@
+/* ── SKELETON SHIMMER ── */
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to   { background-position:  200% 0; }
+}
+
+.sk {
+  background: #ebebeb;
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.65) 50%,
+      transparent 100%
+    );
+    background-size: 200% 100%;
+    animation: shimmer 1.4s ease-in-out infinite;
+  }
+}
+
+/* ── LINES ── */
+.sk-line         { height: 10px; border-radius: 2px; }
+.sk-line--title  { width: 70%; height: 13px; }
+.sk-line--meta   { width: 50%; height: 9px; margin-top: 6px; }
+.sk-line--label  { width: 45%; height: 8px; }
+
+/* ── TOPIC CARD SKELETON ── */
+.sk-topic-card {
+  background: white;
+  border: 2.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 1.5rem 1.25rem;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  min-height: 170px;
+
+  .sk-topic-accent  { height: 4px; position: absolute; top: 0; left: 0; right: 0; }
+  .sk-topic-icon    { width: 36px; height: 36px; border-radius: 4px; margin-bottom: 0.85rem; }
+  .sk-topic-name    { width: 65%; height: 14px; margin-bottom: 0.4rem; }
+  .sk-topic-count   { width: 80%; height: 9px; margin-bottom: 0.85rem; }
+  .sk-topic-bar     { height: 4px; border-radius: 2px; }
+  .sk-topic-prog    { width: 40%; height: 8px; margin-top: 0.35rem; }
+
+  position: relative;
+  overflow: hidden;
+}
+
+/* ── CHALLENGE ROW SKELETON ── */
+.sk-challenge-row {
+  background: white;
+  border: 2.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.08);
+
+  .sk-ch-icon   { width: 40px; height: 40px; border-radius: 3px; flex-shrink: 0; }
+  .sk-ch-info   { flex: 1; display: flex; flex-direction: column; gap: 0; }
+  .sk-ch-reward { width: 70px; height: 13px; }
+  .sk-ch-status { width: 72px; height: 28px; border-radius: 2px; }
+}
+
+/* ── STAT CARD SKELETON ── */
+.sk-stat-card {
+  background: white;
+  border: 2.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  padding: 1.5rem;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+
+  .sk-stat-label { width: 55%; height: 8px; }
+  .sk-stat-val   { width: 45%; height: 44px; margin: 0.5rem 0 0.35rem; }
+  .sk-stat-sub   { width: 60%; height: 9px; }
+  .sk-stat-bar   { height: 8px; border-radius: 3px; margin-top: 0.75rem; }
+}
+
+/* ── SUBTOPIC ROW SKELETON ── */
+.sk-subtopic-row {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  padding: 1.1rem 1.5rem;
+  background: white;
+  border: 2.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.08);
+
+  .sk-st-num    { width: 28px; height: 28px; border-radius: 2px; flex-shrink: 0; }
+  .sk-st-info   { flex: 1; display: flex; flex-direction: column; gap: 0; }
+  .sk-st-bar    { width: 80px; height: 6px; border-radius: 2px; }
+  .sk-st-status { width: 60px; height: 22px; border-radius: 2px; }
+}
+
+/* ── CHALLENGE PREVIEW SKELETON ── */
+.sk-preview-card {
+  background: white;
+  border: 2.5px solid rgba(0, 0, 0, 0.12);
+  border-radius: 4px;
+  box-shadow: 8px 8px 0 rgba(255, 255, 255, 0.08);
+  max-width: 520px;
+  width: 100%;
+  overflow: hidden;
+
+  .sk-preview-top {
+    padding: 2rem;
+    border-bottom: 2.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .sk-preview-meta {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 2.5px solid rgba(0, 0, 0, 0.08);
+  }
+
+  .sk-preview-meta-item {
+    padding: 1rem;
+    border-right: 2.5px solid rgba(0, 0, 0, 0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+
+    &:last-child { border-right: none; }
+  }
+
+  .sk-preview-actions {
+    padding: 1.5rem 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .sk-eyebrow  { width: 40%; height: 8px; }
+  .sk-title    { width: 80%; height: 28px; }
+  .sk-desc-1   { width: 100%; height: 10px; }
+  .sk-desc-2   { width: 65%; height: 10px; }
+  .sk-meta-lbl { width: 60%; height: 8px; }
+  .sk-meta-val { width: 80%; height: 14px; margin-top: 2px; }
+  .sk-btn-main { height: 48px; border-radius: 3px; }
+  .sk-btn-sub  { height: 36px; border-radius: 3px; }
+}

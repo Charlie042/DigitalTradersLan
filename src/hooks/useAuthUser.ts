@@ -1,54 +1,17 @@
-import { useState, useEffect, useCallback } from 'react';
-import { getApiBase } from '../lib/api';
-import type { AuthUser } from '../types/auth';
-import {
-  authFetchHeaders,
-  consumeSessionTokenFromHash,
-  setStoredSessionToken,
-} from '../lib/authToken';
+import { useCallback } from 'react'
+import type { AuthUser } from '../types/auth'
+import { useAuthMe } from '@/services/api/hooks'
+import { getApiBase } from '@/lib/api'
 
 export function useAuthUser() {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const apiBase = getApiBase();
-
-  useEffect(() => {
-    consumeSessionTokenFromHash();
-    let cancelled = false;
-    setLoading(true);
-    const headers: HeadersInit = { ...authFetchHeaders() };
-    void fetch(`${apiBase}/api/auth/me`, {
-      credentials: 'include',
-      headers,
-    })
-      .then((r) => r.json())
-      .then((data: { user: AuthUser | null }) => {
-        if (!cancelled) setUser(data.user ?? null);
-      })
-      .catch(() => {
-        if (!cancelled) setUser(null);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [apiBase]);
+  const me = useAuthMe()
+  const user = (me.data?.data.user as AuthUser | null | undefined) ?? null
+  const loading = me.isLoading
 
   const signOut = useCallback(async () => {
-    const headers: HeadersInit = { ...authFetchHeaders() };
-    try {
-      await fetch(`${apiBase}/api/auth/logout`, {
-        method: 'POST',
-        credentials: 'include',
-        headers,
-      });
-    } finally {
-      setStoredSessionToken(null);
-      setUser(null);
-    }
-  }, [apiBase]);
+    const apiBase = getApiBase()
+    await fetch(`${apiBase}/api/auth/logout`, { method: 'POST', credentials: 'include' })
+  }, [])
 
-  return { user, loading, signOut, setUser };
+  return { user, loading, signOut }
 }

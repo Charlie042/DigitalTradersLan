@@ -1,7 +1,8 @@
+import { Link } from '@tanstack/react-router';
 import './index.scss';
 import { HeroProps } from './types';
 
-export default function Hero({ onOpenAuth }: HeroProps) {
+export default function Hero({ user, onOpenSignIn }: HeroProps) {
   return (
     <section className="hero">
       <div className="hero-corner-tl"></div>
@@ -17,7 +18,7 @@ export default function Hero({ onOpenAuth }: HeroProps) {
 
       <div className="hero-badge">
         <span className="badge-pulse"></span>
-        Beta launching soon — join the waitlist
+        Practice with real structure — zero financial risk
       </div>
 
       <div className="hero-hl">
@@ -29,7 +30,13 @@ export default function Hero({ onOpenAuth }: HeroProps) {
       <p className="hero-sub">The gamified trading practice platform that turns beginners into consistent traders — through real market challenges, instant rewards, and zero risk.</p>
 
       <div className="hero-ctas">
-        <a href="#cta" className="btn btn-blue" onClick={(e) => { e.preventDefault(); onOpenAuth(); }}>Start Practicing Free ⚡</a>
+        {user ? (
+          <Link to="/dashboard" className="btn btn-blue">Go to dashboard</Link>
+        ) : (
+          <button type="button" className="btn btn-blue" onClick={() => { void onOpenSignIn(); }}>
+            Start practicing free
+          </button>
+        )}
         <a href="#how" className="btn btn-ghost">See How It Works →</a>
       </div>
     </section>

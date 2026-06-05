@@ -3,8 +3,10 @@ import crypto from 'node:crypto';
 import { eq } from 'drizzle-orm';
 import { db } from '../db/index.js';
 import { users } from '../db/schema.js';
-import { COOKIE_NAME, signSessionToken, verifySessionToken } from '../lib/session.js';
+import { asyncHandler } from '../lib/http.js';
+import { COOKIE_NAME, getSessionUserIdFromRequest, signSessionToken } from '../lib/session.js';
 import { getOAuth2Client, GOOGLE_SCOPES } from '../lib/googleOAuth.js';
+import { sendWelcomeEmail } from '../email/welcomeEmail.js';
 
 const router = Router();
 
@@ -129,23 +131,6 @@ function postLoginRedirectUrl(): string {
   return `${base}${path}`;
 }
 
-async function getSessionUserId(req: Request): Promise<number | null> {
-  let token: string | null = null;
-  const authHeader = req.headers.authorization;
-  if (typeof authHeader === 'string' && authHeader.startsWith('Bearer ')) {
-    token = authHeader.slice(7).trim();
-  }
-  if (!token) {
-    const c = req.cookies?.[COOKIE_NAME];
-    token = typeof c === 'string' ? c : null;
-  }
-  if (!token) return null;
-  const payload = await verifySessionToken(token);
-  if (!payload) return null;
-  const id = Number.parseInt(payload.sub, 10);
-  return Number.isFinite(id) ? id : null;
-}
-
 router.get('/google', (_req: Request, res: Response) => {
   try {
     const oauth2Client = getOAuth2Client();
@@ -250,6 +235,15 @@ router.get('/google/callback', async (req: Request, res: Response) => {
         })
         .returning({ id: users.id });
       userId = inserted.id;
+
+      void sendWelcomeEmail({
+        to: email,
+        displayName: name ?? email,
+      }).then((result) => {
+        if (!result.sent) {
+          console.warn('[auth] Welcome email not sent:', result.reason);
+        }
+      });
     }
 
     const sessionToken = await signSessionToken({
@@ -276,8 +270,8 @@ router.get('/google/callback', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/me', async (req: Request, res: Response) => {
-  const userId = await getSessionUserId(req);
+router.get('/me', asyncHandler(async (req: Request, res: Response) => {
+  const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ user: null });
     return;
@@ -300,10 +294,10 @@ router.get('/me', async (req: Request, res: Response) => {
       hasGoogleRefreshToken: Boolean(u.googleRefreshToken),
     },
   });
-});
+}));
 
-router.post('/google/refresh', async (req: Request, res: Response) => {
-  const userId = await getSessionUserId(req);
+router.post('/google/refresh', asyncHandler(async (req: Request, res: Response) => {
+  const userId = await getSessionUserIdFromRequest(req);
   if (userId === null) {
     res.status(401).json({ error: 'Not signed in.' });
     return;
@@ -341,7 +335,7 @@ router.post('/google/refresh', async (req: Request, res: Response) => {
     console.error('[auth/google/refresh]', e);
     res.status(500).json({ error: 'Failed to refresh Google access token.' });
   }
-});
+}));
 
 router.post('/logout', (_req: Request, res: Response) => {
   res.clearCookie(COOKIE_NAME, clearCookieOptions());

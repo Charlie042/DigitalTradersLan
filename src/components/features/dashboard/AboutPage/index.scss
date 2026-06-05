@@ -96,22 +96,24 @@
 }
 
 .founder-photo {
+  position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
   border-bottom: 2.5px solid var(--black);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  overflow: hidden;
+  background: var(--off);
 
   &.founder-photo-1 { background: linear-gradient(135deg, #1B4DFF 0%, #0F2E99 100%); }
   &.founder-photo-2 { background: linear-gradient(135deg, #FF3D5A 0%, #c0002a 100%); }
 }
 
-.founder-initials {
-  font-family: 'Bebas Neue', sans-serif;
-  font-size: 5rem;
-  color: rgba(255, 255, 255, 0.3);
-  letter-spacing: 0.05em;
+.founder-photo-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 20%;
 }
 
 .founder-info {
@@ -273,9 +275,9 @@
   margin-top: 0.5rem;
 }
 
-/* ── GOFUNDME ── */
-.gofundme-section {
-  background: var(--electric);
+/* ── FEEDBACK ── */
+.feedback-section {
+  background: var(--black);
   border-top: 2.5px solid var(--black);
   padding: 6rem 2.5rem;
   text-align: center;
@@ -287,46 +289,26 @@
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.06) 1px, transparent 1px);
+      linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
     background-size: 48px 48px;
   }
 }
 
-.gf-corner-tl {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 140px;
-  height: 140px;
-  background: rgba(255, 255, 255, 0.06);
-  clip-path: polygon(0 0, 100% 0, 0 100%);
-}
-
-.gf-corner-br {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 140px;
-  height: 140px;
-  background: rgba(255, 255, 255, 0.06);
-  clip-path: polygon(100% 0, 100% 100%, 0 100%);
-}
-
-.gf-inner {
+.feedback-inner {
   position: relative;
   z-index: 1;
   max-width: 580px;
   margin: 0 auto;
 }
 
-.gf-eyebrow {
+.feedback-eyebrow {
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 700;
   font-size: 0.76rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.45);
   margin-bottom: 1rem;
   display: flex;
   align-items: center;
@@ -338,11 +320,11 @@
     display: block;
     width: 24px;
     height: 2px;
-    background: rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.2);
   }
 }
 
-.gf-headline {
+.feedback-headline {
   font-family: 'Bebas Neue', sans-serif;
   font-size: clamp(3rem, 9vw, 6.5rem);
   line-height: 0.9;
@@ -351,41 +333,402 @@
   letter-spacing: 0.02em;
 
   .blk {
-    background: var(--black);
+    background: var(--electric);
     padding: 0.02em 0.15em;
     display: inline-block;
   }
 }
 
-.gf-body {
+.feedback-body {
   font-size: 1rem;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.55);
   line-height: 1.8;
   margin-bottom: 2.5rem;
 }
 
-.btn-gofundme {
+.btn-feedback {
   font-family: 'Barlow Condensed', sans-serif;
   font-weight: 900;
   font-size: 1.1rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  background: white;
-  color: var(--electric);
+  background: var(--electric);
+  color: white;
   padding: 1.1rem 3rem;
-  border: 2.5px solid var(--black);
+  border: 2.5px solid var(--electric);
   border-radius: 3px;
-  text-decoration: none;
+  cursor: pointer;
   display: inline-block;
-  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.25);
+  box-shadow: 8px 8px 0 rgba(27, 77, 255, 0.35);
   transition: transform 0.15s, box-shadow 0.15s;
 
-  &:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 rgba(0, 0, 0, 0.25); }
+  &:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 rgba(27, 77, 255, 0.35); }
 }
 
-.gf-fine {
+/* ── FEEDBACK MODAL ── */
+.fb-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: rgba(13, 13, 13, 0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  animation: fbFadeIn 0.2s ease both;
+}
+
+@keyframes fbFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.fb-modal {
+  background: white;
+  border: 2.5px solid var(--black);
+  border-radius: 4px;
+  box-shadow: 8px 8px 0 var(--black);
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: fbSlideUp 0.22s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
+}
+
+@keyframes fbSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ── MODAL HEADER ── */
+.fb-modal-top {
+  background: var(--electric);
+  padding: 2rem 2rem 1.5rem;
+  border-bottom: 2.5px solid var(--black);
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '⚡';
+    position: absolute;
+    right: 1.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 5rem;
+    opacity: 0.08;
+    line-height: 1;
+  }
+}
+
+.fb-modal-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  width: 34px;
+  height: 34px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+
+  &:hover { background: rgba(255, 255, 255, 0.25); }
+}
+
+.fb-modal-eyebrow {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  position: relative;
+  z-index: 1;
+
+  &::before {
+    content: '';
+    display: block;
+    width: 18px;
+    height: 3px;
+    background: rgba(255, 255, 255, 0.6);
+  }
+}
+
+.fb-modal-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.4rem;
+  color: white;
+  letter-spacing: 0.03em;
+  line-height: 0.95;
+  position: relative;
+  z-index: 1;
+}
+
+.fb-modal-sub {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.65);
+  margin-top: 0.5rem;
+  line-height: 1.65;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── MODAL BODY ── */
+.fb-modal-body {
+  padding: 2rem;
+}
+
+.fb-field {
+  margin-bottom: 1.25rem;
+
+  label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 800;
+    font-size: 0.76rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--black);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+
+  input, textarea {
+    width: 100%;
+    border: 2.5px solid var(--black);
+    border-radius: 3px;
+    padding: 0.85rem 1rem;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.95rem;
+    background: var(--off);
+    color: var(--black);
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.06);
+    resize: none;
+    appearance: none;
+
+    &::placeholder { color: var(--muted); }
+
+    &:focus {
+      border-color: var(--electric);
+      box-shadow: 3px 3px 0 var(--electric);
+      background: white;
+    }
+  }
+
+  textarea {
+    height: 130px;
+    line-height: 1.7;
+  }
+
+  &.fb-field--error input,
+  &.fb-field--error textarea {
+    border-color: var(--coral);
+    box-shadow: 3px 3px 0 var(--coral);
+  }
+}
+
+.fb-req { color: var(--coral); }
+
+/* ── RATING ── */
+.fb-rating-label {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.6rem;
+  display: block;
+}
+
+.fb-rating-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.fb-rating-btn {
+  flex: 1;
+  border: 2.5px solid var(--black);
+  border-radius: 3px;
+  padding: 0.6rem 0;
+  background: white;
+  cursor: pointer;
+  text-align: center;
+  font-size: 1.4rem;
+  box-shadow: 3px 3px 0 var(--black);
+  transition: transform 0.12s, box-shadow 0.12s, background 0.12s;
+
+  &:hover { transform: translate(-2px, -2px) scale(1.05); box-shadow: 5px 5px 0 var(--black); }
+  &.active { background: var(--amber); border-color: var(--amber); box-shadow: 3px 3px 0 var(--black); }
+}
+
+/* ── CHAR COUNT ── */
+.fb-char-count {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.35rem;
+
+  span {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-weight: 700;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--muted);
+
+    &.warn { color: var(--coral); }
+  }
+}
+
+/* ── SUBMIT ── */
+.fb-submit-btn {
+  width: 100%;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--electric);
+  color: white;
+  padding: 1.1rem;
+  border: 2.5px solid var(--black);
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 5px 5px 0 var(--black);
+  transition: transform 0.15s, box-shadow 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.5rem;
+
+  &:hover:not(:disabled) { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 var(--black); }
+  &:disabled { opacity: 0.6; cursor: not-allowed; }
+}
+
+.fb-spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: fbSpin 0.8s linear infinite;
+}
+
+@keyframes fbSpin {
+  to { transform: rotate(360deg); }
+}
+
+.fb-privacy {
+  text-align: center;
+  margin-top: 1rem;
   font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.4);
-  margin-top: 1.25rem;
-  letter-spacing: 0.05em;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+/* ── SUCCESS SCREEN ── */
+.fb-success-top {
+  background: var(--lime);
+  border-bottom: 2.5px solid var(--black);
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.fb-success-emoji {
+  font-size: 3.5rem;
+  display: block;
+  margin-bottom: 0.75rem;
+  animation: fbBounce 1s ease infinite;
+}
+
+@keyframes fbBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+.fb-success-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 2.8rem;
+  color: var(--black);
+  letter-spacing: 0.04em;
+  line-height: 1;
+}
+
+.fb-success-sub {
+  font-size: 0.92rem;
+  color: rgba(13, 13, 13, 0.65);
+  margin-top: 0.5rem;
+  line-height: 1.7;
+}
+
+.fb-success-body {
+  padding: 2rem;
+  text-align: center;
+}
+
+.fb-success-message {
+  font-size: 1rem;
+  color: rgba(13, 13, 13, 0.7);
+  line-height: 1.85;
+  margin-bottom: 2rem;
+  text-align: left;
+
+  strong { color: var(--black); }
+}
+
+.fb-success-from {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--muted);
+  border-top: 2.5px solid var(--black);
+  padding-top: 1rem;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.fb-close-success {
+  width: 100%;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 900;
+  font-size: 1rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--black);
+  color: white;
+  padding: 1rem;
+  border: 2.5px solid var(--black);
+  border-radius: 3px;
+  cursor: pointer;
+  box-shadow: 5px 5px 0 rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s, box-shadow 0.15s;
+
+  &:hover { transform: translate(-3px, -3px); box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.25); }
+}
+
+@media (max-width: 520px) {
+  .fb-modal-title { font-size: 2rem; }
 }

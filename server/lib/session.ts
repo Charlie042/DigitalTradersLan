@@ -1,3 +1,4 @@
+import type { Request } from 'express';
 import { SignJWT, jwtVerify } from 'jose';
 
 const COOKIE_NAME = 'session';
@@ -37,3 +38,13 @@ export async function verifySessionToken(token: string): Promise<SessionPayload 
 }
 
 export { COOKIE_NAME };
+
+/** Numeric user id from signed session cookie (matches `users.id` serial). */
+export async function getSessionUserIdFromRequest(req: Request): Promise<number | null> {
+  const token = req.cookies?.[COOKIE_NAME];
+  if (!token || typeof token !== 'string') return null;
+  const payload = await verifySessionToken(token);
+  if (!payload) return null;
+  const id = Number.parseInt(payload.sub, 10);
+  return Number.isFinite(id) ? id : null;
+}

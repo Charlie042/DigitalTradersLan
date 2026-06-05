@@ -30,6 +30,87 @@
 }
 .nav-cta:hover { transform: translate(-2px,-2px); box-shadow: 5px 5px 0 var(--black) !important; color: var(--white) !important; }
 
+.nav-google {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--black);
+  text-decoration: none;
+  transition: color 0.15s;
+  white-space: nowrap;
+}
+a.nav-google:hover { color: var(--electric); }
+
+button.nav-google {
+  font: inherit;
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--black);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  white-space: nowrap;
+}
+button.nav-google:hover { color: var(--electric); }
+
+.nav-google--block {
+  width: 100%;
+  text-align: left;
+}
+
+.nav-dashboard {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--electric);
+  color: var(--white);
+  text-decoration: none;
+  border: var(--border);
+  border-radius: 3px;
+  padding: 0.35rem 0.65rem;
+  box-shadow: 2px 2px 0 var(--black);
+  flex-shrink: 0;
+  transition: transform 0.15s, color 0.15s;
+}
+.nav-dashboard:hover { color: var(--white); transform: translate(-1px, -1px); }
+
+.nav-auth {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  max-width: min(240px, 28vw);
+}
+.nav-auth__avatar {
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: var(--border);
+  object-fit: cover;
+}
+.nav-auth__name {
+  font-family: 'Barlow Condensed', sans-serif;
+  font-weight: 700;
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+.nav-auth--mobile {
+  width: 100%;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  max-width: none;
+}
+
 .theme-toggle {
   display: inline-flex;
   align-items: center;
@@ -122,14 +203,6 @@
 
   ul li:last-child a { border-bottom: none; }
   ul li a:hover { color: var(--electric); }
-
-  .nav-cta {
-    margin-top: 0.5rem;
-    display: inline-block !important;
-    text-align: center;
-    width: 100%;
-    border-bottom: var(--border) !important;
-  }
 }
 
 @media (max-width: 800px) {

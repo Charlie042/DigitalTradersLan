@@ -1,3 +1,6 @@
+import type { AuthUser } from '../../../../types/auth';
+
 export interface NavbarProps {
-  onOpenAuth: () => void;
+  onOpenSignIn: () => void;
+  user: AuthUser | null;
 }

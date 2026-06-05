@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from '@tanstack/react-router';
 import './index.scss';
 import { useTheme } from '../../../../context/ThemeContext';
 import { NavbarProps } from './types';
@@ -39,7 +40,7 @@ function HamburgerIcon({ open }: { open: boolean }) {
   );
 }
 
-export default function Navbar({ onOpenAuth }: NavbarProps) {
+export default function Navbar({ onOpenSignIn, user }: NavbarProps) {
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -54,9 +55,21 @@ export default function Navbar({ onOpenAuth }: NavbarProps) {
           <li><a href="#how">How it works</a></li>
           <li><a href="#rewards">Rewards</a></li>
           <li>
-            <a href="#cta" className="nav-cta" onClick={(e) => { e.preventDefault(); onOpenAuth(); }}>
-              Get Early Access
-            </a>
+            {user ? (
+              <span className="nav-auth">
+                {user.picture && (
+                  <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
+                )}
+                <span className="nav-auth__name" title={user.email}>{user.name}</span>
+                <Link to="/dashboard" className="nav-dashboard" onClick={closeMenu}>
+                  Dashboard
+                </Link>
+              </span>
+            ) : (
+              <button type="button" className="nav-google" onClick={() => { void onOpenSignIn(); }}>
+                Sign in with Google
+              </button>
+            )}
           </li>
         </ul>
         <button
@@ -86,13 +99,25 @@ export default function Navbar({ onOpenAuth }: NavbarProps) {
             <li><a href="#how" onClick={closeMenu}>How it works</a></li>
             <li><a href="#rewards" onClick={closeMenu}>Rewards</a></li>
             <li>
-              <a
-                href="#cta"
-                className="nav-cta"
-                onClick={(e) => { e.preventDefault(); closeMenu(); onOpenAuth(); }}
-              >
-                Get Early Access
-              </a>
+              {user ? (
+                <div className="nav-auth nav-auth--mobile">
+                  {user.picture && (
+                    <img src={user.picture} alt="" className="nav-auth__avatar" width={28} height={28} />
+                  )}
+                  <span className="nav-auth__name">{user.name}</span>
+                  <Link to="/dashboard" className="nav-dashboard" onClick={closeMenu}>
+                    Dashboard
+                  </Link>
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  className="nav-google nav-google--block"
+                  onClick={() => { closeMenu(); void onOpenSignIn(); }}
+                >
+                  Sign in with Google
+                </button>
+              )}
             </li>
           </ul>
         </nav>

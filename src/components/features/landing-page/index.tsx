@@ -11,9 +11,13 @@ import Stats from './Stats';
 import Differentiators from './Differentiators';
 import CTA from './CTA';
 import Footer from './Footer';
+import { useAuthUser } from '@/hooks/useAuthUser';
+import { getApiBase } from '@/lib/api';
 
 export default function LandingPage() {
-  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+  const [isSignInModalOpen, setIsSignInModalOpen] = useState(false);
+  const { user } = useAuthUser();
+  const apiBase = getApiBase();
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -27,9 +31,12 @@ export default function LandingPage() {
 
   return (
     <>
-      <Navbar onOpenAuth={() => setIsAuthModalOpen(true)} />
+      <Navbar
+        onOpenSignIn={() => setIsSignInModalOpen(true)}
+        user={user}
+      />
       <main>
-        <Hero onOpenAuth={() => setIsAuthModalOpen(true)} />
+        <Hero user={user} onOpenSignIn={() => setIsSignInModalOpen(true)} />
         <Ticker type="electric" />
         <Ticker type="black" />
         <Problem />
@@ -38,10 +45,14 @@ export default function LandingPage() {
         <Rewards />
         <Stats />
         <Differentiators />
-        <CTA onOpenAuth={() => setIsAuthModalOpen(true)} />
+        <CTA />
       </main>
       <Footer />
-      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
+      <AuthModal
+        isOpen={isSignInModalOpen}
+        onClose={() => setIsSignInModalOpen(false)}
+        googleAuthUrl={`${apiBase}/api/auth/google`}
+      />
     </>
   );
 }
